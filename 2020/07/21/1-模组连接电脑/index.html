@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>  模组与电脑连接的整体步骤 |    white.</title>
+  <title>  模组与电脑连接的整体步骤 |    Blog of Stoner</title>
   <!-- 标签页图标 -->
   
   <!-- 图标库 -->
@@ -17,6 +17,12 @@
 <link rel="stylesheet" href="/css/white.css">
 
   <!-- 代码高亮 -->
+  
+    
+      
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.1.1/styles/github.css">
+
+    
   
   <!-- tocbot -->
   
@@ -56,7 +62,7 @@
     <div class="menu-inner">
       <div class="menu-site-name  animate__animated  animate__fadeInUp">
         <a href="/">
-          white.
+          Blog of Stoner
         </a>
         
       </div>
@@ -76,6 +82,12 @@
           </a>
         
         
+        <a href="/search">
+          <li class="menu-li  animate__animated  animate__fadeInUp">
+            <i class="ri-search-line"></i>
+          </li>
+        </a>
+        
         </ul>
 
       </div>
@@ -91,7 +103,7 @@
     <div class="post-content-inner ">
       <div class="post-intro-no-cover">
         <div class="post-title animate__animated  animate__fadeInUp">模组与电脑连接的整体步骤</div>
-        <div class="meta-intro animate__animated  animate__fadeInUp"><span class="intro-span">2020年7月21日 by white</span></div>
+        <div class="meta-intro animate__animated  animate__fadeInUp"><span class="intro-span">2020年7月21日 by Stoner</span></div>
         
       </div>
       <div class="post-content-main animate__animated  animate__fadeInUp">
@@ -119,24 +131,27 @@
 <li><p>连接成功的话可以看到下面几幅图的样子，其中模组内部其实是一个<strong>Linux</strong>系统，因此连接成功后会出现让你<strong>login</strong>的语句，其中登陆名为<strong>root</strong>，无登陆密码：<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/5.png" alt="Alt text"><br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/6.png" alt="Alt text"><br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/7.png" alt="Alt text"></p>
 </li>
 <li><p>登陆成功之后，按照<strong>《Goke 固件组 EVB基础操作中》</strong>的第10页PPT的两句命令进行执行：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">init.sh</span><br><span class="line">adidemo -a</span><br></pre></td></tr></table></figure></li>
-<li>执行完毕之后查看电脑的<strong>ip地址</strong>与模组的<strong>ip地址</strong>：<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/9.png" alt="Alt text"><br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/8.png" alt="Alt text"><br>可以发现，两者的<strong>ip地址</strong>并不相同，可以通过： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 169.254.28.10</span><br></pre></td></tr></table></figure>
-将两者<strong>ip地址</strong>统一到一起；</li>
+<pre><code> init.sh
+ adidemo -a
+</code></pre></li>
+<li>执行完毕之后查看电脑的<strong>ip地址</strong>与模组的<strong>ip地址</strong>：<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/9.png" alt="Alt text"><br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/8.png" alt="Alt text"><br>可以发现，两者的<strong>ip地址</strong>并不相同，可以通过：<pre><code> ifconfig eth0 169.254.28.10
+</code></pre>将两者<strong>ip地址</strong>统一到一起；</li>
 </ol>
 <ul>
 <li>【备注】<strong>eth0代表的是第一块物理网卡，更多的解释请参照：<a href="https://blog.csdn.net/pzqingchong/article/details/75675618" target="_blank" rel="noopener">CSDN-eth0 eth0:1 eth0.1 的区别</a></strong></li>
 </ul>
 <ol>
 <li><p>然后根据<strong>《Goke 固件组 EVB基础操作中》</strong>的第11页PPT中网络查看的内容，打开软件<strong>VLC</strong>，点击左上角的<strong>媒体——打开网络串流</strong>，然后在框中输入：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rtsp:&#x2F;&#x2F;169.254.28.10&#x2F;stream0</span><br></pre></td></tr></table></figure>
-<p>其中169.254.28.10即是我们为模组设定的IP地址。<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595327517526.png" alt="Alt text"><br>点击播放按钮，就能看到模组的摄像头模块中拍摄到的实际画面了：<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595327636347.png" alt="Alt text"></p>
+<pre><code> rtsp://169.254.28.10/stream0
+</code></pre><p>其中169.254.28.10即是我们为模组设定的IP地址。<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595327517526.png" alt="Alt text"><br>点击播放按钮，就能看到模组的摄像头模块中拍摄到的实际画面了：<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595327636347.png" alt="Alt text"></p>
 </li>
 <li><p>最后关闭模组的时候直接拔出相应的插头即可。</p>
 </li>
 </ol>
 <h2 id="3-注意事项"><a href="#3-注意事项" class="headerlink" title="3. 注意事项"></a>3. 注意事项</h2><ol>
-<li>需要测试模组上的摄像头模块是否正常的时候需要在登陆模组的<strong>Linux系统</strong>之后，输入下面命令： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">init.sh</span><br><span class="line">adidemo -a</span><br></pre></td></tr></table></figure>
-进入到<strong>adi@goke#</strong>用户才能测试摄像头；<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595382610141.png" alt="Alt text"></li>
+<li>需要测试模组上的摄像头模块是否正常的时候需要在登陆模组的<strong>Linux系统</strong>之后，输入下面命令：<pre><code> init.sh
+ adidemo -a
+</code></pre>进入到<strong>adi@goke#</strong>用户才能测试摄像头；<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595382610141.png" alt="Alt text"></li>
 <li>进行<strong>XML配置</strong>的时候，首先需要退出<strong>adi@goke#</strong>用户到<strong>root</strong>目录下：<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595382673519.png" alt="Alt text"><br>然后进入<strong>/usr/local/bin</strong>目录中，使用<strong>vi video.xml</strong>进行<strong>xml</strong>文件的查看和修改：<br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595382872449.png" alt="Alt text"><br><img src="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/1595382906306.png" alt="Alt text"><blockquote>
 <p><strong>需要注意的是</strong>：<strong>Stream下的</strong>$<type>3</type>$中的<strong>3</strong>代表的是<strong>H.265</strong>，<strong>2</strong>代表的是<strong>JPEG</strong>，<strong>1</strong>代表的是<strong>H.264</strong>，<strong>0</strong>代表开关，需要注意的是<strong>Stream0/1/2/3</strong>这四个流可以同时都打开，相应的在<strong>VLC</strong>中展示的时候就可以出现多个窗口了；</p>
 </blockquote>
@@ -150,8 +165,11 @@
 <p> <StreamSetting num="4"><br>可以看出输出的流有<strong>4</strong>个。其中在<strong>Stream0</strong>中：</StreamSetting></p>
 </li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt;3&lt;&#x2F;type&gt;代表图像的编码格式为3-H.265,2-JPEG,1-H.264,0-代表开关，需要注意的是Stream0&#x2F;1&#x2F;2&#x2F;3这四个流可以同时都打开，相应的在VLC中展示的时候就可以出现多个窗口了;</span><br><span class="line">&lt;width&gt;1280&lt;&#x2F;width&gt;代表输出流Stream0的图像分辨率宽度为1920；</span><br><span class="line">&lt;height&gt;720&lt;&#x2F;height&gt;代表输出流Stream0的图像分辨率高度为1080；</span><br><span class="line">&lt;fps&gt;25&lt;&#x2F;fps&gt;代表输出流Stream0的帧率FPS为25；</span><br></pre></td></tr></table></figure>
-<blockquote>
+<pre><code>&lt;type&gt;3&lt;/type&gt;代表图像的编码格式为3-H.265,2-JPEG,1-H.264,0-代表开关，需要注意的是Stream0/1/2/3这四个流可以同时都打开，相应的在VLC中展示的时候就可以出现多个窗口了;
+&lt;width&gt;1280&lt;/width&gt;代表输出流Stream0的图像分辨率宽度为1920；
+&lt;height&gt;720&lt;/height&gt;代表输出流Stream0的图像分辨率高度为1080；
+&lt;fps&gt;25&lt;/fps&gt;代表输出流Stream0的帧率FPS为25；
+</code></pre><blockquote>
 <p><strong>注意：</strong>输出流的一些参数受限于摄像头的对应参数，比方说分辨率或者帧率，输出流的分辨率只能小于等于$1920\times1080$，因为这是摄像头的硬件极限，过大或者过小都会造成摄像头无法正常工作，相应的参数如帧率也是同样的道理。这里大概测试了一下<strong>Stream0</strong>在分辨率上的下限为$720\times480$，帧率的下限为$10 FPS$.</p>
 </blockquote>
 <h2 id="5-一些其他需要补充的知识点"><a href="#5-一些其他需要补充的知识点" class="headerlink" title="5. 一些其他需要补充的知识点"></a>5. 一些其他需要补充的知识点</h2><blockquote>
@@ -172,6 +190,8 @@
         <!-- 评论 -->
         
          
+          
+         
         
       </div>
    </div>
@@ -190,7 +210,7 @@
     <ul class="footer-ul">
         
         <li class="footer-li">
-            <a href="https://github.com/FuShaoLei/hexo-theme-white" target="_blank">
+            <a href="https://github.com/Stoooner" target="_blank">
                 <i class="ri-github-line"></i>
             </a>
         </li>
@@ -207,6 +227,13 @@
 <script src="/js/search.js"></script>
 
 
+
+    
+      
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/highlight.min.js"></script>
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
 
 
   
