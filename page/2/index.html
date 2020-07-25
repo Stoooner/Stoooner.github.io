@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Stoner的博客</title><meta name="description" content="今日事, 今日毕"><meta name="author" content="Stoner"><meta name="copyright" content="Stoner"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/page/2/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="website"><meta property="og:title" content="Stoner的博客"><meta property="og:url" content="http://yoursite.com/page/2/"><meta property="og:site_name" content="Stoner的博客"><meta property="og:description" content="今日事, 今日毕"><meta property="og:image" content="http://yoursite.com/img/avatar.png"><meta property="article:published_time" content="2020-07-25T14:15:28.773Z"><meta property="article:modified_time" content="2020-07-25T14:15:28.773Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: false,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isSidebar: false
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Stoner的博客" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">62</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(http://qe0z9wdl5.bkt.clouddn.com/20200725221240.png)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Stoner的博客</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site_title">Stoner的博客</h1><div id="site_subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/Stoooner" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="QQ:1786957287@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll_down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout_page" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019/06/04/transfer-learning/" title="VGG16迁移学习分析">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VGG16迁移学习分析"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/06/04/transfer-learning/" title="VGG16迁移学习分析">VGG16迁移学习分析</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-06-04 13:42:10"><i class="far fa-calendar-alt"></i>2019-06-04</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a></span></div><div class="content">
+整理使用VGG16框架进行迁移学习的方法步骤.
+
+1. 迁移学习简介
+深度学习中最强大的理念之一就是有时候神经网络可以从一个任务中学习到知识，并将这些知识应用到另一个独立的任务中。比如现在你训练好了一个神经网络能够识别像猫这样的对象，然后使用这些学习到的知识去帮助你更好的阅读X射线扫描图，这就是所谓的迁移学习。
+
+2. VGG Network介绍
+「VGG Network」，牛津大学VGG实验室设计的架构，将AlexNet的$8$层提高到了$19$层，真正让深度这个词得以充分体现。从VGG开始，人们不再使用太大的卷积核，取而代之的是若干个小卷积核的组合。比如， $3$个步长为$1$的$3 \times 3$卷积核，可以拥有同$1$个$7 \times 7$的卷积核一样的感受野，但是，它可以使整个网络变得更深，并且更具有非线性。同时，还能够进一步减少训练的参数量。
+
+下图是各个著名网络的对比相关信息以及「VGG Network」的信息：
+3. 迁移学习实际操作步骤首先，整个操作过程借鉴一下文章：
+
+
+迁移学习 Transfer Learning
+用tensorflow迁移学习猫狗分类
+ ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019/05/30/tensorflow-save-and-restore/" title="预测代码中遇到的问题">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="预测代码中遇到的问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/30/tensorflow-save-and-restore/" title="预测代码中遇到的问题">预测代码中遇到的问题</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-30 08:45:54"><i class="far fa-calendar-alt"></i>2019-05-30</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">
+记录预测代码模块化过程中遇到的问题.
+
+1. TensorFlow模型的保存和提取1.1 模型保存
+saver = tf.train.Saver(max_to_keep=num, var_list=var_list)
+saver.save(sess, model_save_path, global_step=i)
+需要注意的是max_to_keep用于指定需要保存的模型个数，var_list指定要保存和恢复的变量，如果saver=tf.train.Saver()里面不传入参数，默认保存全部变量。在模型运行运行结束后会生成4个文件，分别是：
+
+checkpoint文件保存了一个目录下所有的模型文件列表，这个文件是tf.train.Saver类自动生成且自动维护的，它是一个二进制文件，包含了weights, biases, gradients和其他variables的值。但是0.11版本后的都修改了，用.data和.index保存值，用checkpoint记录最新的记录。；
+meta文件保存了TensorFlow计算图的结构，可以理解为神经网络的网络结构，TensorFlow通过元图（M ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019/05/27/object-detection-1/" title="目标检测算法(2)">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="目标检测算法(2)"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/27/object-detection-1/" title="目标检测算法(2)">目标检测算法(2)</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-27 17:29:37"><i class="far fa-calendar-alt"></i>2019-05-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a></span></div><div class="content">
+详细记录目标检测算法整个过程的原理.
+
+1.5 Bounding Box 预测
+卷积的滑动窗口实现效率很高，但是存在输出边界框不精确的问题。
+
+在滑动窗算法中，我们取这些离散的位置集合，然后在它们上面跑分类器。在这种情况下很有可能没有一个能完美匹配汽车位置的边界框，而真正完美的边界框甚至都是有点长方形的。
+其中一个能够得到更加精确的边界框的算法是$YOLO$，它的做法如下：
+
+首先，假设你的输入图片为$100 \times 100$，然后在图片上放入网格(这里假设使用的是$3 \times 3$的网格，实际在使用的时候会用更加精细的网格)。基本思路是使用图像分类和定位算法，然后将相应的算法逐一应用到这$9$个格子上。更加具体一点的就是，你需要定义训练标签，所以对于$9$个格子中的每一个，指定一个标签$y$，其中$y$是和以前一样的$8$维向量：
+y =  \begin{bmatrix} p_c \\ b_x \\ b_y \\ b_h \\b_w \\c_1 \\ c_2 \\ c_3\end{bmatrix}其中$(b_x, b_y, b_h, b_w)$代表如果那个格子有对象，那 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019/05/26/object-detection/" title="目标检测算法(1)">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="目标检测算法(1)"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/26/object-detection/" title="目标检测算法(1)">目标检测算法(1)</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-26 23:43:58"><i class="far fa-calendar-alt"></i>2019-05-26</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a></span></div><div class="content">
+详细记录目标检测算法整个过程的原理.
+
+1.1 目标定位(Object Localization)
+
+Image Classification(图像分类)
+Classification with Localization(定位分类): 判断图像中是否为某一物体(分类)，还要在图片中标记处它的位置(定位)，用边框把物体圈出来。定位分类问题通常是图像中只有一个较大的对象，且对象位于图片中间位置。
+Detection(检测):当图片中有多个对象的时候(例如自动驾驶中需要检测出汽车、行人以及交通灯等多个对象)，需要将它们的类别检测出来，还要分别都确定其位置。
+
+
+
+对于定位分类问题来说，首先可以明确地是它是多类单标签问题，也就是说在图像中它仅有一个物体，这个物体的标签仅有一个，最后的softmax层输出最有可能的一个类别概率。
+那么在分类基础之上，想要通过网络最后输出除了物体的类别之外，还包含物体的位置(定位)应该怎么办呢？方法是让神经网络除了仅有的一个softmax输出单元之外，再多输出几个单元，这几个单元就是物体的边界框(bounding box)。这里具体的就是让神经网络再多输出$4$ ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019/05/25/YOLO/" title="YOLO_v3代码解析以及相关注意事项">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="YOLO_v3代码解析以及相关注意事项"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/25/YOLO/" title="YOLO_v3代码解析以及相关注意事项">YOLO_v3代码解析以及相关注意事项</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-25 16:52:18"><i class="far fa-calendar-alt"></i>2019-05-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a></span></div><div class="content">
+对于目标检测算法YOLO在使用过程中遇到的问题以及知识点进行记录.
+
+1. 项目介绍&#160; &#160; &#160; &#160;本次YOLO_v3的项目来源于机器之心翻译的项目—-从零开始PyTorch项目：YOLO v3目标检测实现以及从零开始 PyTorch 项目：YOLO v3 目标检测实现（下）两部分组成，原版的博客在此Series: YOLO object detector in PyTorch，原始博客的GitHub地址为：ayooshkathuria/pytorch-yolo-v3，最后附上论文的地址：YOLOv3: An Incremental Improvement。
+2. 项目需求及相关文件解释&#160; &#160; &#160; &#160;YOLO_v3官方原始的代码是由C语言所写，真是佩服作者手撸代码能力啊，但是由于源码并没有相关的任何注释，阅读起来特别费事，所以参考了网上关于YOLO_v3迁移到$Tensorflow$和$Pytorch$的代码进行阅读，以便对代码有更深的认识和理解。
+关于此YOLO_v3的$Pytorch$的代码，其$Pyt ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019/05/25/Kaggle-2/" title="Kaggle竞赛相关知识">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kaggle竞赛相关知识"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/25/Kaggle-2/" title="Kaggle竞赛相关知识">Kaggle竞赛相关知识</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-25 16:50:50"><i class="far fa-calendar-alt"></i>2019-05-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">
+Kaggle相关的知识点.
+
+1. 分类算法基础篇1.1 相应内容
+&#160; &#160; &#160; &#160;1. 线性分类器基本原理与案例实战&#160; &#160; &#160; &#160;2. 支持向量机分类器原理与案例实战&#160; &#160; &#160; &#160;3. 朴素贝叶斯分类器原理与案例实战&#160; &#160; &#160; &#160;4. K近邻分类器原理与案例实战&#160; &#160; &#160; &#160;5. 决策树分类器原理与案例实战&#160; &#160; &#160; &#160;6. 集成模型分类器原理与案例实战
+
+1.2 线性分类器（Logistic Regression）1.2.1 监督学习基本架构和流程&#160; &#160; &#160; &#160;
+&#160; &#160; &#160; &#160;
+1.2.2 监督学习之分类问题&#160; &#160; &#160; &#160;监督学习的重点在于根据已有的经验知识对未知样本的目标、标记进行预测。根据目标预测变量的不同，监督学习分类可以 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019/05/25/data-preprocess/" title="数据预处理---数据清洗 &amp; 特征工程">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据预处理---数据清洗 &amp; 特征工程"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/25/data-preprocess/" title="数据预处理---数据清洗 &amp; 特征工程">数据预处理---数据清洗 &amp; 特征工程</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-25 16:48:52"><i class="far fa-calendar-alt"></i>2019-05-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span></div><div class="content">
+收集的一些比较重要的特征工程相关的博客链接.
+
+1.相应参考链接
+&#160; &#160; &#160; &#160;1. 数学系的数据挖掘民工(公众号:CharlotteDataMining)&#160; &#160; &#160; &#160;2. 机器学习中的数据清洗与特征处理综述&#160; &#160; &#160; &#160;3. 机器学习之特征工程&#160; &#160; &#160; &#160;4. 随笔分类 - 特征工程&#160; &#160; &#160; &#160;5. weibao—特征工程&#160; &#160; &#160; &#160;6. 数据清洗—power0405hf的专栏&#160; &#160; &#160; &#160;7. 知乎专栏—数据清洗的一些梳理&#160; &#160; &#160; &#160;8. 利用Python Pandas进行数据预处理-数据清洗&#160; &#160; &#160; &#160;9. molearner—python数据预处理&#160; &#160; &#160; &#160;10. p ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019/05/25/Kaggle/" title="Kaggle简单小例子代码">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kaggle简单小例子代码"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/25/Kaggle/" title="Kaggle简单小例子代码">Kaggle简单小例子代码</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-25 16:46:51"><i class="far fa-calendar-alt"></i>2019-05-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">
+Kaggle简单小例子介绍.
+
+1.分类器例子1.1 Logistic Regression分类器(乳腺肿瘤)#_*_ coding:utf-8 _*_
+&quot;&quot;&quot;
+Logistics Regression模型和随机梯度下降（SGDC）用于乳腺肿瘤的二分类预测
+&quot;&quot;&quot;
+#导入工具包
+import numpy as np
+import pandas as pd
+
+#第一步：数据预处理
+#创建特征列表
+column_names = [&#39;Sample code number&#39;,&#39;Clump Thickness&#39;,&#39;Uniformity of Cell Size&#39;,
+                &#39;Uniformity of Cell Shape&#39;,&#39;Marginal Adhesion&#39;,
+                &#39;Signle Epithelial Cell Size&#39;,&#39;Bare Nuclei&#39;,
+        ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019/05/25/CNN/" title="Visualizing and Understanding ConvNet---CNN可视化理解">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Visualizing and Understanding ConvNet---CNN可视化理解"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/25/CNN/" title="Visualizing and Understanding ConvNet---CNN可视化理解">Visualizing and Understanding ConvNet---CNN可视化理解</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-25 16:45:05"><i class="far fa-calendar-alt"></i>2019-05-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a></span></div><div class="content">
+卷积可视化的一些相关定义以及链接.
+
+1. 感受野的定义(receptive field)&#160; &#160; &#160; &#160;此处抛出感受野(receptive field)的定义和理解：
+
+&#160; &#160; &#160; &#160;感受野其实就是卷积神经网络每一层输出的特征图（feature map）上的像素点在原始图像上映射的区域大小。或者说输出feature map某个节点的响应对应的输入图像的区域就是感受野。&#160; &#160; &#160; &#160;比如我们第一层是一个33的卷积核，那么我们经过这个卷积核得到的feature map中的每个节点都源自这个33的卷积核与原图像中33的区域做卷积，那么我们就称这个feature map的节点感受野大小为33&#160; &#160; &#160; &#160;如果再经过pooling层，假定卷积层的stride是1，pooling层大小22，stride是2，那么pooling层节点的感受野就是44&#160; &#160; &#160; &#160;有几点需要注意的是，padding并不 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2019/05/25/alpha-go/" title="Alpha Go论文解析链接">     <img class="post_bg" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Alpha Go论文解析链接"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/05/25/alpha-go/" title="Alpha Go论文解析链接">Alpha Go论文解析链接</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2019-05-25 16:43:16"><i class="far fa-calendar-alt"></i>2019-05-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">
+一些解读AlphaGo论文的博文链接.
+
+1. 参考文献：
+&#160; &#160; &#160; 1. 蘑菇先生学习记—-Alpha Go论文解析&#160; &#160; &#160; 2. AlphaGo核心技术之一，蒙特卡洛树搜索&#160; &#160; &#160; 3. AlphaGo相关技术：蒙特卡罗方法简介&#160; &#160; &#160; 4. 阿尔法狗的利器：蒙特卡洛算法，看完就懂了！&#160; &#160; &#160; 5. 深度解读 AlphaGo 算法原理&#160; &#160; &#160; 6. Alphago中的蒙特卡洛算法&#160; &#160; &#160; 7. AlphaGo原理-蒙特卡罗树搜索+深度学习
+
+</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Stoner</div><div class="author-info__description">今日事, 今日毕</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives"><div class="headline">文章</div><div class="length_num">48</div></a></div><div class="card-info-data-item is-center">      <a href="/tags"><div class="headline">标签</div><div class="length_num">62</div></a></div><div class="card-info-data-item is-center">     <a href="/categories"><div class="headline">分类</div><div class="length_num">16</div></a></div></div><div class="card-info-bookmark is-center"><button class="button--animated" id="bookmark-it" title="加入书签"><i class="fas fa-bookmark"></i><span>加入书签</span></button></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Stoooner" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="QQ:1786957287@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-recent-item"><div class="aside-recent-post"><a href="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200725214526.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="数字视频编码技术原理" alt="数字视频编码技术原理"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/" title="数字视频编码技术原理">数字视频编码技术原理</div><time class="aside-post_meta post-meta__date" title="发表于 2020-07-25 10:37:45">2020-07-25</time></div></a></div><div class="aside-recent-post"><a href="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="http://qe0z9wdl5.bkt.clouddn.com/timg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" title="模组与电脑连接的整体步骤" alt="模组与电脑连接的整体步骤"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020/07/21/1-%E6%A8%A1%E7%BB%84%E8%BF%9E%E6%8E%A5%E7%94%B5%E8%84%91/" title="模组与电脑连接的整体步骤">模组与电脑连接的整体步骤</div><time class="aside-post_meta post-meta__date" title="发表于 2020-07-21 21:35:05">2020-07-21</time></div></a></div><div class="aside-recent-post"><a href="/2020/07/20/hello-world/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200725214905.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="Hello World" alt="Hello World"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2020/07/20/hello-world/" title="Hello World">Hello World</div><time class="aside-post_meta post-meta__date" title="发表于 2020-07-20 20:45:34">2020-07-20</time></div></a></div><div class="aside-recent-post"><a href="/2019/06/19/pb-website/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200725215425.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="TensorFlow分布式与.pd文件相关网页" alt="TensorFlow分布式与.pd文件相关网页"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2019/06/19/pb-website/" title="TensorFlow分布式与.pd文件相关网页">TensorFlow分布式与.pd文件相关网页</div><time class="aside-post_meta post-meta__date" title="发表于 2019-06-19 13:09:30">2019-06-19</time></div></a></div><div class="aside-recent-post"><a href="/2019/06/15/password-python/"><div class="aside-post-cover"><img class="aside-post-bg" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200725215719.png" onerror="this.onerror=null;this.src='/img/404.jpg'" title="Python代码加密" alt="Python代码加密"/></div><div class="aside-post-title"><div class="aside-post_title" href="/2019/06/15/password-python/" title="Python代码加密">Python代码加密</div><time class="aside-post_meta post-meta__date" title="发表于 2019-06-15 14:32:36">2019-06-15</time></div></a></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Numpy/"><span class="card-category-list-name">Numpy</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Python/"><span class="card-category-list-name">Python</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Python%E7%AE%97%E6%B3%95/"><span class="card-category-list-name">Python算法</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/TensorFlow/"><span class="card-category-list-name">TensorFlow</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Ubuntu/"><span class="card-category-list-name">Ubuntu</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/python%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="card-category-list-name">python数据结构</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%A4%A9%E4%BD%93%E7%89%A9%E7%90%86%E5%AD%A6/"><span class="card-category-list-name">天体物理学</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"><span class="card-category-list-name">数据结构</span><span class="card-category-list-count">4</span></a></li>
+            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories">
+                <span>查看更多</span><i class="fas fa-angle-right"></i></a></li>           
+            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/AlphaGo/" style="font-size: 16px; color: #999">AlphaGo</a> <a href="/tags/Batch-Normalization/" style="font-size: 16px; color: #999">Batch_Normalization</a> <a href="/tags/CNN/" style="font-size: 16px; color: #999">CNN</a> <a href="/tags/EPIC/" style="font-size: 16px; color: #999">EPIC</a> <a href="/tags/Inception-Network/" style="font-size: 16px; color: #999">Inception Network</a> <a href="/tags/Kaggle/" style="font-size: 19px; color: #99a1ac">Kaggle</a> <a href="/tags/PCA%E9%99%8D%E7%BB%B4/" style="font-size: 16px; color: #999">PCA降维</a> <a href="/tags/PIL/" style="font-size: 16px; color: #999">PIL</a> <a href="/tags/Python%E4%BB%A3%E7%A0%81%E5%8A%A0%E5%AF%86/" style="font-size: 16px; color: #999">Python代码加密</a> <a href="/tags/TFServing/" style="font-size: 16px; color: #999">TFServing</a> <a href="/tags/TensorFlow/" style="font-size: 22px; color: #99a9bf">TensorFlow</a> <a href="/tags/Ubuntu/" style="font-size: 16px; color: #999">Ubuntu</a> <a href="/tags/VGG16/" style="font-size: 16px; color: #999">VGG16</a> <a href="/tags/Wasserstein-GAN/" style="font-size: 19px; color: #99a1ac">Wasserstein GAN</a> <a href="/tags/XMM-Newton/" style="font-size: 19px; color: #99a1ac">XMM_Newton</a> <a href="/tags/YOLO/" style="font-size: 16px; color: #999">YOLO</a> <a href="/tags/codec/" style="font-size: 19px; color: #99a1ac">codec</a> <a href="/tags/mnist/" style="font-size: 16px; color: #999">mnist</a> <a href="/tags/softmax/" style="font-size: 16px; color: #999">softmax</a> <a href="/tags/summary/" style="font-size: 16px; color: #999">summary</a> <a href="/tags/tensorboard/" style="font-size: 16px; color: #999">tensorboard</a> <a href="/tags/tensorflow-gpu/" style="font-size: 16px; color: #999">tensorflow-gpu</a> <a href="/tags/tfrecord/" style="font-size: 19px; color: #99a1ac">tfrecord</a> <a href="/tags/win10/" style="font-size: 16px; color: #999">win10</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 16px; color: #999">二叉树</a> <a href="/tags/%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/" style="font-size: 19px; color: #99a1ac">优化策略</a> <a href="/tags/%E5%85%A8%E8%BF%9E%E6%8E%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 16px; color: #999">全连接神经网络</a> <a href="/tags/%E5%89%91%E6%8C%87Offer/" style="font-size: 16px; color: #999">剑指Offer</a> <a href="/tags/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 19px; color: #99a1ac">卷积神经网络</a> <a href="/tags/%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%8F%AF%E8%A7%86%E5%8C%96/" style="font-size: 16px; color: #999">卷积网络可视化</a> <a href="/tags/%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E6%A1%86%E6%9E%B6/" style="font-size: 16px; color: #999">卷积网络框架</a> <a href="/tags/%E5%8F%82%E8%80%83%E7%BD%91%E9%A1%B5/" style="font-size: 16px; color: #999">参考网页</a> <a href="/tags/%E5%8F%8D%E5%90%91%E5%8D%B7%E7%A7%AF/" style="font-size: 16px; color: #999">反向卷积</a> <a href="/tags/%E5%9B%9E%E5%BD%92/" style="font-size: 16px; color: #999">回归</a> <a href="/tags/%E5%A4%A9%E4%BD%93%E7%89%A9%E7%90%86%E5%AD%A6/" style="font-size: 22px; color: #99a9bf">天体物理学</a> <a href="/tags/%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E7%AE%97%E6%B3%95%E7%B3%BB%E5%88%97/" style="font-size: 16px; color: #999">手动实现算法系列</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 16px; color: #999">排序</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97/" style="font-size: 16px; color: #999">数据清洗</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 16px; color: #999">数据结构</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 19px; color: #99a1ac">机器学习</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/07/"><span class="card-archive-list-date">七月 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/06/"><span class="card-archive-list-date">六月 2019</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/05/"><span class="card-archive-list-date">五月 2019</span><span class="card-archive-list-count">37</span></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="webinfo-article-name">文章数目 :</div><div class="webinfo-article-count">48</div></div><div class="webinfo-item">      <div class="webinfo-site-uv-name">本站访客数 :</div><div class="webinfo-site-uv-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="webinfo-site-name">本站总访问量 :</div><div class="webinfo-site-pv-count" id="busuanzi_value_site_pv"></div></div></div></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By Stoner</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://jerryc.me/" target="_blank" rel="noopener">blog</a>!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script defer id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="true"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script>if (document.getElementsByClassName('mermaid').length) {
+  loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',function () {
+    mermaid.initialize({
+      theme: 'default',
+  })
+})
+}</script><script src="https://cdn.jsdelivr.net/npm/typed.js"></script><script>var subtitleEffect = true
+if (subtitleEffect) { 
+  var typed = new Typed("#subtitle", {
+    strings: "山河无惧, 来日可期！".split(","),
+    startDelay: 300,
+    typeSpeed: 150,
+    loop: true,
+    backSpeed: 50
+  })
+} else {
+  document.getElementById("subtitle").innerHTML = '山河无惧, 来日可期！'
+}</script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script></body></html>

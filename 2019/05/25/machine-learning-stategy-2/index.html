@@ -1,0 +1,375 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>机器学习项目优化策略(2) | Stoner的博客</title><meta name="description" content="机器学习项目优化策略第二部分  2.1 进行误差分析 如果你希望你的学习算法能够胜任人类能做的任务，但是你的算法的表现还没有达到人类的表现的话，那么人工检查一下你的算法犯的错误也许能够让你了解接下来该做什么，这个过程误差分析(Error Analysis)  还是以猫分类器为例，假设你已经在开发集上取得了$90 \%$的准确率(也就相当于$10\%$的误差)。然后团队成员注意到算法将一些狗的图片"><meta name="keywords" content="机器学习,深度学习,优化策略"><meta name="author" content="Stoner"><meta name="copyright" content="Stoner"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/2019/05/25/machine-learning-stategy-2/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="机器学习项目优化策略(2)"><meta property="og:url" content="http://yoursite.com/2019/05/25/machine-learning-stategy-2/"><meta property="og:site_name" content="Stoner的博客"><meta property="og:description" content="机器学习项目优化策略第二部分  2.1 进行误差分析 如果你希望你的学习算法能够胜任人类能做的任务，但是你的算法的表现还没有达到人类的表现的话，那么人工检查一下你的算法犯的错误也许能够让你了解接下来该做什么，这个过程误差分析(Error Analysis)  还是以猫分类器为例，假设你已经在开发集上取得了$90 \%$的准确率(也就相当于$10\%$的误差)。然后团队成员注意到算法将一些狗的图片"><meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><meta property="article:published_time" content="2019-05-25T02:50:18.000Z"><meta property="article:modified_time" content="2019-06-21T04:25:04.000Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="prev" title="近期参考网页(1)" href="http://yoursite.com/2019/05/25/Reference-of-web-page/"><link rel="next" title="机器学习项目优化策略(1)" href="http://yoursite.com/2019/05/24/machine-learning-stategy/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: false,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Stoner的博客" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">62</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content toc-div-class" style="display:none"></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Stoner的博客</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">机器学习项目优化策略(2)</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2019-05-25 10:50:18"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2019-05-25</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2019-06-21 12:25:04"><i class="fas fa-history fa-fw"></i> 更新于 2019-06-21</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5/">机器学习策略</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><blockquote>
+<p><strong>机器学习项目优化策略第二部分</strong><br><a id="more"></a></p>
+</blockquote>
+<h3 id="2-1-进行误差分析"><a href="#2-1-进行误差分析" class="headerlink" title="2.1 进行误差分析"></a>2.1 进行误差分析</h3><blockquote>
+<p>如果你希望你的学习算法能够胜任人类能做的任务，但是你的算法的表现还没有达到人类的表现的话，那么人工检查一下你的算法犯的错误也许能够让你了解接下来该做什么，这个过程<strong>误差分析(Error Analysis)</strong></p>
+</blockquote>
+<p>还是以猫分类器为例，假设你已经在<strong>开发集</strong>上取得了$90 \%$的准确率(也就相当于$10\%$的误差)。然后团队成员注意到算法将一些狗的图片分类成了猫，此时成员针对此提出建议希望针对狗的图片进行算法的优化(比如收集更多狗的图片，或者设计一些只处理狗的算法功能之类的)，以便让猫分类器在处理狗的图片上做得更好，这个项目可能需要花费几个月的时间才能让算法在狗的图片上犯更少的错。所以问题在于：<strong>你是否应该根据此建议去开启一个项目用于专门处理狗的图片？这是否值得？</strong></p>
+<p>使用<strong>误差分析</strong>可以让你判断一些选项或者建议是否值得去做，以上面例子为例，过程如下：</p>
+<blockquote>
+<ol>
+<li>首先，收集一下比如说$100$个被算法给错误标记的<strong>开发集</strong>例子；</li>
+<li>然后手动检查，看一下你的<strong>开发集</strong>里面有多少被算法给错误标记的例子是狗的。</li>
+</ol>
+</blockquote>
+<p>现在假设那$100$个被算法错误标记的样本中，狗的图片被误标记为猫有$5$张(占$100$张的$5\%$)，这意味着$100$个错误标记的样本中，你即使完全解决了误标记为狗的问题，你也只能修正这$100$个错误中的$5$个，或者换句话说如果只有$5\%$的错误是狗的图片，那么你在狗的问题上花费了很多时间也只是收效甚微的，你的<strong>开发集</strong>的误差最多也只是从$10\%$下降到$9.5\%$。这样你就可以确定这个建议这样花大量时间是不好的，或者说给这个建议花的时间要设置一个上限。</p>
+<p>相应的如果$100$个错误标记的样本中，狗的照片有$50$张的话，那么花费比较多的时间去解决这个问题的效果可能就很好了。对于此时，如果解决了这个问题的话，那么<strong>开发集</strong>的误差则会从$10\%$下降到$5\%$了。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558680203383.png" alt="Alt text"><br>而这样的人工的<strong>误差分析</strong>可能仅仅花费数十分钟的时间，却能帮助整个团队判断某个可能在以后花费数个月的工作是否值得去做。</p>
+<p>另外一点需要注意的是，有时候我们可能需要并行的去评估多个建议是否需要去执行的时候，可以采用建立表格的方式去处理，以下面的图为例：<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558680471810.png" alt="Alt text"><br>图中针对猫分类器的例子列举了几个需要并行去处理的建议，这个时候建立一张表格，表格最左边的一列是需要人工过一遍的想要去分析的图像集(比如<strong>开发集</strong>中被误分类的$100$张图片)，之后的每一列则对应你需要并行处理的问题中的每一个，最后一列可以设置为备注列，然后你对于这$100$张误分类图片开始一张图片一张图片的过，如果第一张图片属于第一个想法(问题)，那就在对应列的那里打一个勾，如果需要对某些东西进行备注，那就在相应的地方进行备注即可。有时候某些图片(数据)可能符合多个问题，所以在对应图片那一行可能不止一个打出的勾。当把这些数据过一遍之后，需要统计每个问题所占的百分比。对于上面这个例子，可以将团队分成两部分去处理两个最大占比的问题，而其他问题可能暂时不是最重要的。</p>
+<p><strong>这个分析的结果可以给出一个估计是否值得去处理每一个不同错误类型！</strong>这个方法可能帮助你对各个不同的需要处理的问题排出一个<strong>高低优先级</strong>。</p>
+<h3 id="2-2-清楚标注错误的数据"><a href="#2-2-清楚标注错误的数据" class="headerlink" title="2.2 清楚标注错误的数据"></a>2.2 清楚标注错误的数据</h3><blockquote>
+<p>对于一个监督学习来说，如果你观察你的数据集，并发现有些输出标签$Y$一开始就被标记错误了，那是否值得花时间去修正这些标签呢？</p>
+</blockquote>
+<p>还是以猫分类器为例，数据集中图片是猫的被标注为$Y=1$, 不是猫的标注为$Y=0$。以下图为例：<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558681500908.png" alt="Alt text"><br>上图中其中一张图片的标签被错误标记为了猫。</p>
+<p>首先我们考虑一下<strong>训练集</strong>，事实证明，深度学习算法对于<strong>训练集中</strong>的<strong>随机误差</strong>是相当稳健鲁棒的(<strong>Robust</strong>)。只要你的标记错误的例子离随机误差不太远(有时候可能是做标记的人没有注意，或者不小心按错键了…)，只要误差足够随机，<strong>那么放着这些误差不管可能也是没有问题的，而不是花费太多时间去修复它们</strong>。也即有时候修正是有价值的，有时候放着不管也是没有问题的——<strong>只要总数据集足够的大</strong>。</p>
+<p>需要注意的是深度学习对于<strong>随机误差</strong>是稳健的<strong>(Robust)</strong>，但是对于系统性的错误就没有那么鲁棒/稳健了。比如说如果做标记的人一直把白色的狗标记为猫，那就成问题了，因为你的算法学习之后会把所有白色的狗都分类为猫。</p>
+<p>除此之外，如果<strong>开发集</strong>和<strong>测试集</strong>中有标记错误的例子呢？一般的做法是在上一节提到的表格中加上一列，代表这个问题，然后统计被算法分错的样本中实际是人为标记的标签出错的样本有多少：<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558682411594.png" alt="Alt text"><br>这里给出的建议是对于<strong>开发集</strong>和<strong>测试集</strong>：如果这些标记错误严重影响到你在<strong>开发集</strong>上评估算法的能力了，那就应该去花时间修正这个错误；但是如果它们没有严重影响到你用开发集去评估成本偏差(<strong>cost bias</strong>)的能力，那可能就不该花宝贵的时间去处理这个问题。</p>
+<p>这里建议看$3$个数字来确定是否值得去人工修正标记出错的数据：</p>
+<blockquote>
+<ol>
+<li><strong>整体的开发集误差</strong>($10\%$)</li>
+<li><strong>标签被错误标记引起的误差</strong>($0.6\%$)</li>
+<li><strong>其他原因导致的错误引起的误差</strong>($9.4\%$)<br>所以此时可以判断哪个更重要去处理。</li>
+</ol>
+</blockquote>
+<p>在对<strong>开发集</strong>和<strong>测试集</strong>的标签进行检查并尝试修正的时候，有一些需要考虑的东西：</p>
+<blockquote>
+<ol>
+<li>不管用什么修正手段，<strong>都要同时作用在开发集和测试集上</strong>，<strong>以确保它们继续来自相同的分布</strong>。</li>
+<li>同时考虑检验算法判断正确和判断错误的例子，因为对于判断正确的例子，有时候也可能是因为算法运气好把某个东西判断对了，在这样的特例中可能会因为修正标签而使得算法从判断正确到判断错误。</li>
+<li>对训练集的修正可能并不和开发集以及测试集的修正同时。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558684603276.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<h3 id="2-3-快速搭建你的第一个系统，并进行迭代"><a href="#2-3-快速搭建你的第一个系统，并进行迭代" class="headerlink" title="2.3 快速搭建你的第一个系统，并进行迭代"></a>2.3 快速搭建你的第一个系统，并进行迭代</h3><blockquote>
+<p>如果你正在开发全新的机器学习应用，通常的建议是应该尽快建立第一个系统原型并快速进行迭代。</p>
+</blockquote>
+<p>通常几乎对于所有的机器学习项目，在初始的时候可能有很多个方向可以前进，而且每个方向都是相对合理的，但是挑战在于如何选择一个方向集中精力去处理。因此建议如下：如果你想搭建全新的机器学习项目，那就先快速搭建好第一个系统原型，然后快速迭代。然后，利用偏差方差分析和误差分析来确定下一步优化什么。</p>
+<p><strong>建立这个初始系统的意义在于，有一个学习过的系统可以让你确定偏差方差的范围，然后就可以确定下一步应该优化什么，让你能够进行误差分析，可以观察一些错误，然后想出所有能走的方向，然后根据排出的优先级，确定最先应该做什么。</strong><br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558685779082.png" alt="Alt text"><br>如果并不是经验非常丰富的人，那么一开始不要把第一个系统弄得过于复杂。</p>
+<h3 id="2-4-在不同的划分上进行训练并测试"><a href="#2-4-在不同的划分上进行训练并测试" class="headerlink" title="2.4 在不同的划分上进行训练并测试"></a>2.4 在不同的划分上进行训练并测试</h3><blockquote>
+<p>深度学习算法对于训练数据的量的胃口很大，当你收集到足够多带标签的数据，构成训练集的时候，效果最好。这导致很多团队用尽一切办法收集数据，让训练集的数据量达到最大，即使有些数据甚至大部分数据都来自和<strong>开发集</strong>以及<strong>测试集</strong>不同的分布。在深度学习时代，越来越多的团队都用来自和开发集以及测试集分布不同的数据来训练，这里有一些好的做法。</p>
+</blockquote>
+<p>假设你现在在开发一款可以通过用户上传的图片来判断图像中物体是否是猫的<strong>app</strong>，现在你有两个数据源：</p>
+<blockquote>
+<ol>
+<li>一个是你真正关心的数据分布，来自应用上传的数据；</li>
+<li>另一个数据源就是你可以使用爬虫挖掘网页，下载下来的数据(可以获取很多取景专业的，高分辨的，数据量大的数据)</li>
+</ol>
+</blockquote>
+<p>假设你真正的用户量不多，大体只能获取到$10000$张左右的图片，但是通过爬虫的方式可以从互联网获取很多的数据。因此现在的问题是一个是来自用户上传的其中一个分布的数据，而你还有一个可获取的数据量大得多的数据集，来自另一个分布，而你又不想直接用那$10000$张图片，因为这样你的训练集就太小了。使用爬虫的图片似乎有帮助，但是问题是爬虫的图片并不完全来自你想要的分布，那你改怎么做？</p>
+<p>其中一个选择是这样：</p>
+<blockquote>
+<ol>
+<li>将两组数据合并在一起，然后随机的分配到训练集、开发集和测试集。那么这么设立你的数据集有一些好处以及坏处，好处在于你的训练集、开发集和测试集都来自一个分部，便于管理。但是坏处在于(坏处还不小)，开发集中很多是来自爬虫下载的图片，而那并不是你真真正正的关心的数据分布。根据图中的例子可以计算期望得到开发集中大体有$2381$张图像来自网页，大体只有$119$张来自手机上传。而开发集的目的在于花费大部分精力去优化你真正想要优化的分布，而此时都用于优化从网页下载的图片了，这其实是你不想要的。所以这一项不建议。</li>
+<li>训练集全部来自爬虫或者网上下载的，如果有需要，还可以加上$5000$张来自手机上传的图片。然后对于开发集和测试集都是来自手机上传的图片。这样划分的好处就在于你现在瞄准的目标就是你想要的去处理的分布。只是缺点是你的训练集的分布和开发集以及测试集之间的分布是不同的。但是事实证明，这样把数据分成训练集、开发集和测试集会给你带来长期的更好的系统性能，只是需要再加入一些特殊技巧，后面讲到。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558688401220.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<p>另一个例子是语音激活后视镜的例子，假设你现在能够获取的别的一些并非来自语音激活后视镜的例子，对于你的训练集你可以讲你拥有的所有语音数据(从其他语音识别问题中收集来的数据——下面左图就是对应的其他语音识别问题的大量数据)，而是你现在实际的跟语句激活后视镜的问题相关的数据仅有$20000$，所以这些数据实际和训练集的数据分布不大一样，这些是你真正关心的数据分布，而这些少量的数据应该被设置为你的开发集和测试集(或者分一半再给训练集中混合)。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558689289491.png" alt="Alt text"></p>
+<h3 id="2-5-不匹配数据划分的偏差和方差"><a href="#2-5-不匹配数据划分的偏差和方差" class="headerlink" title="2.5 不匹配数据划分的偏差和方差"></a>2.5 不匹配数据划分的偏差和方差</h3><blockquote>
+<p>当你的训练集与开发集和测试集的分布不同的时候，应该如何分析偏差和方差？</p>
+</blockquote>
+<p>还是猫分类器的例子，假设在这个问题上<strong>贝叶斯误差</strong>几乎为$0\%$，而在进行误差分析的时候通常是需要看训练误差、开发误差，假设这里训练误差为$1\%$，而开发误差为$10\%$，当开发集分布和训练集相同的时候，可以说模型存在很大的方差问题，模型泛化能力差。</p>
+<p>但是当两个数据的分布不一致的时候，这个结论就不能轻易下了：</p>
+<blockquote>
+<ol>
+<li>首先这个时候算法只见过训练集的数据，没见过开发集的数据;</li>
+<li>其次，开发集数据来自不同的分布。</li>
+</ol>
+</blockquote>
+<p>因为你的数据同时改变了两个事情，因此很难确定这增加的$9\%$误差有多少是因为算法没看过开发集而导致的，又有多少是因为来自不同分布的缘故。</p>
+<p>所以为了分辨两个因素的影响，定义一组新的数据是有意义的，我们称之为<strong>训练开发集(training_dev set)</strong>，因此这是个新的数据子集，来自于训练集分布的子集(没有经过训练)。</p>
+<p>因此我们可以对于训练集进行随机打乱，然后从分出一部分作为训练-开发集。就像开发集和测试集得是来自同一个分布一样，训练集和训练开发集也是来自同一个分布，只是训练开发集不用于训练模型。</p>
+<p>为了做<strong>误差分析</strong>，你应该做的是看看分类器在训练集上的误差，训练误差集上的误差以及开发集上的误差，假设:</p>
+<blockquote>
+<ol>
+<li>training-error： $1\%$</li>
+<li>training-dev-error：$9\%$</li>
+<li>dev-error：$10\%$</li>
+</ol>
+</blockquote>
+<p>根据上面的例子可以得出结论，当你从训练数据变到训练-开发数据时，误差真的上升了很多，而训练数据和训练-开发数据的差异在于你的网络结构可以看到第一部分的数据并直接在上面做训练，但是模型没有在第二部分上面直接训练。</p>
+<p>从上面的数据中就可以看出，算法存在方差(<strong>variance</strong>)问题，因为训练-开发集的数据和训练集是来自同一分布的数据中测得的，所以可以得知，尽管你的网络结构在训练集中表现良好，<strong>但是无法泛化到来自相同分布的训练-开发集中.</strong></p>
+<p>假设现在数据变了：</p>
+<blockquote>
+<ol>
+<li>training-error： $1\%$</li>
+<li>training-dev-error：$1.5\%$</li>
+<li>dev-error：$10\%$</li>
+</ol>
+</blockquote>
+<p>从上可以看出现在你的模型的方差问题很小了，因为当你的模型在没有见过，但是来自相同分布的训练-开发集上运行时，误差仅仅上升了一点点。但是当你转到开发集的时候，误差就大大上升了，所以这是数据不匹配(<strong>data mismatched</strong>)的问题，因为模型在训练-开发集上很好，但是在开发集上做的不好。</p>
+<p>假设现在数据又变了：</p>
+<blockquote>
+<ol>
+<li>training-error： $10\%$</li>
+<li>training-dev-error：$11\%$</li>
+<li>dev-error：$12\%$</li>
+</ol>
+</blockquote>
+<p>需要注意的是，人类水平在这列计算机视觉问题中的<strong>贝叶斯误差</strong>的估计大概是$0\%$，因此如果你现在的模型如上面的表现的话，那说明你的模型存在<strong>偏差问题(可避免误差)</strong>。</p>
+<p>最后一个例子：</p>
+<blockquote>
+<ol>
+<li>training-error： $10\%$</li>
+<li>training-dev-error：$11\%$</li>
+<li>dev-error：$20\%$</li>
+</ol>
+</blockquote>
+<p>此时的模型存在两个问题：</p>
+<blockquote>
+<ol>
+<li>偏差较大(可避免误差较大)，因为你在训练集上都没有做好；</li>
+<li>数据不匹配问题较大。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558704233071.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<p>因此对于这$5$个指标，我们通过分析相应之间的差距可以得知我们的模型大体是出在了什么问题上，假设：</p>
+<blockquote>
+<ol>
+<li><strong>Human Level：</strong> $4\%$</li>
+<li><strong>Training-set Error：</strong> $7\%$</li>
+<li><strong>Training-Dev-set Error：</strong> $10\%$</li>
+<li><strong>Dev-set Error：</strong> $12\%$</li>
+<li><strong>Test-set Error：</strong> $12\%$</li>
+</ol>
+<hr>
+<ol>
+<li>其中$1$和$2$之间得出可避免误差(偏差)有多大；</li>
+<li>$2$和$3$之间表明了方差的大小，体现了你的模型从训练集推广到训练-开发集时效果如何？</li>
+<li>$3$和$4$则告诉你数据不匹配的问题大体有多大？</li>
+<li>$4$和$5$之间的差距则告诉你对开发集的过拟合程度，所以如果差距很大，则说明模型对开发集过拟合了(开发集和测试集必须得是来自同一个分布的)。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558705020259.png" alt="Alt text"></li>
+<li>如果出现上图最右边的情况的话，说明可能你的开发测试集的难度比训练集的难度要小。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558705575568.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<h3 id="2-6-定位数据不匹配"><a href="#2-6-定位数据不匹配" class="headerlink" title="2.6 定位数据不匹配"></a>2.6 定位数据不匹配</h3><blockquote>
+<p>需要注意的是，当你的训练集的数据分布和开发集的数据分布不相同的时候，如果误差分析显示你的模型存在数据不匹配的问题，该怎么办? 比较遗憾的是这个问题没有完全系统的解决方案，但是我们可以做一下可能会有帮助的尝试。</p>
+</blockquote>
+<p>假设现在模型有比较严重的数据不匹配问题，一个具体的做法是通过误差分析尝试了解训练集和开发集的具体差异，以语音激活后视镜的例子为例：在数据不匹配的问题下，现在我们需要查看一下来自开发集的样本，尝试弄清楚开发集和训练集到底有什么不同。比方说你发现很多开发集样本噪声过多，这将得到你的开发集和训练集的差异之一。</p>
+<p>因此了解开发测试集误差的性质时，你就有可能知道开发集跟训练集的不同之处，或者了解到开发集可能更加难以识别等。<strong>因此一个可能的办法是尝试把训练数据变得更像开发集一点，或者收集更多类似开发集和测试集的数据。</strong></p>
+<p>比方说当你知道开发集和训练集的不同点来自于某个噪声的话，那你可以通过模拟车辆噪声的方式去让训练集更像开发集一点。而这个就是一种<strong>人工合成数据</strong>的方式。以上对于具体的问题处理方式不同，所以难以系统的进行处理，但是这种加入人工经验去解决问题的思路虽不能保证百分百有限，但是在实际中多数时候都是比较有成效的。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558706460024.png" alt="Alt text"></p>
+<hr>
+<p>以建立语音识别系统为例，也许实际上你没有那么多实际在汽车背景噪声下录取的音频，但是我们可以进行<strong>合成</strong>。所以假设你录制了大量的清晰的音频，那你可以通过人工合成的方式在清晰音频中加入汽车背景噪声。<strong>通过人工合成数据，你可以快速的制造更多的训练数据，那就不需要花时间实际出去收集数据了。</strong></p>
+<p>因此如果误差分析得出的结果是你的训练数据和开发集之间存在数据不匹配问题(比如开发集的数据存在车辆背景噪声)，那么这个时候通过人工合成的数据喂给你的算法就是合理的。</p>
+<blockquote>
+<p><strong>不过这里需要注意的一点是：</strong>如果你训练数据(清晰的音频)有$10000$个小时，而你录制的汽车噪声只有$1$个小时的话，那么对于合成的数据而言，人听起来可能觉得没什么问题，但是这里有个风险就是有可能你的算法最后会对这个$1$个小时的汽车噪声过拟合。<br>特别的，对于所有汽车噪声背景所在的集合中，如果你只录了一个小时汽车噪声，那么对于所有汽车噪声背景的集合，你可能只模拟了全部数据空间中的一小部分。当你从整个噪声数据空间很小的一个子集出发合成数据的时候，网络模型可能就会对你这一小时的汽车噪声过拟合。而如果你使用$10000$小时不重复的汽车噪声(不考虑是否能够做到以及怎么做到)，那么合成的数据对性能提升可能会更好。</p>
+</blockquote>
+<p><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558707501631.png" alt="Alt text"></p>
+<p>最后需要说明的是对于数据不匹配的问题来说，使用人工合成数据提升系统性能的例子很多，这证明人工合成数据是有效的，但是需要注意的是，一定要谨慎，要记住你有可能从所有可能性的空间中只选了很小一部分去模拟数据。</p>
+<h3 id="2-7-迁移学习"><a href="#2-7-迁移学习" class="headerlink" title="2.7 迁移学习"></a>2.7 迁移学习</h3><blockquote>
+<p>深度学习中最强大的理念之一就是有时候神经网络可以从一个任务中学习到知识，并将这些知识应用到另一个独立的任务中。比如现在你训练好了一个神经网络能够识别像猫这样的对象，然后使用这些学习到的知识去帮助你更好的阅读<strong>X射线扫描图</strong>，这就是所谓的<strong>迁移学习</strong>。</p>
+</blockquote>
+<p><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558711774948.png" alt="Alt text"><br>假设你现在训练了一个神经网络，输入是一些图像，输出是一些识别对象(猫猫狗狗啥的)，那么当你准备将学习到的知识迁移到别的方面的时候，比方说放射科的X射线扫描图的时候，你可以将最后一层的神经网络输出层拿走，以及最后一层的输入权重给删掉，然后为最后一层重新赋予随机权重，然后将其放在放射诊断数据中进行训练。</p>
+<p>具体来说，第一阶段中当你进行图像识别任务训练的时候，你可以训练神经网络的所有常用参数，所有权重以及所有层，这样你就得到了一个能够做图像识别预测的网络，在训练完这个神经网络之后，要实现迁移学习，你要做的就是将数据集换成新的$(x, y)$数据对，现在这些数据对就变成了放射科图像，你要做的就是初始化最后一层的权重，这个称之为$\omega^{[l]}, b^{[l]}$随机初始化，现在我们在这个新的数据集上重新训练网络。</p>
+<p>要使用放射科数据集重新训练神经网络的做法有几种：</p>
+<blockquote>
+<ol>
+<li>如果你的放射科数据集很小，你可能只需要重新训练最后一层的权重，并保持前面的参数不动，经验规则就是如果你的新的数据集比较小，那么就只训练输出层钱的最后一两层，而数据很多的时候，也许你可以重新训练神经网络中所有的参数；</li>
+<li>如果放射科的数据足够多，那么你可以重新神经网络剩下的所有层；</li>
+<li>当你新的数据足够多的时候，你重新训练神经网络中所有的参数的时候，那么在图像识别数据进行的初期训练阶段被称之为<strong>预训练(pre-training)</strong>，因为你使用图像识别数据去训练的时候，是去预先初始化神经网络的权重，然后如果你以后更新所有权重然后在放射科数据上进行训练，这个过程被称之为<strong>微调(fine-tuning)</strong>。</li>
+</ol>
+</blockquote>
+<p>为何上面的迁移是有效果的呢？原因如下：</p>
+<blockquote>
+<p>有很多低层次特征，比如说边缘检测、曲线检测等从非常大的图像识别数据集中学习得到了这些能力，可能是比较有助于你的学习算法在放射科诊断中做的更好的，因为算法学习到了很多结构信息、图像形状信息，其中一些知识可能是很有用的。因此学会了图像识别，它可能学到了足够多的信息，可以了解不同图像的组成部分是怎样的，它学习到了点、曲线等等知识。</p>
+</blockquote>
+<hr>
+<p>另一个例子是假设你现在的网络学习到了通过一段音频将听到的东西进行输出的算法，假设现在我们现在想要搭建一个<strong>唤醒词</strong>或者<strong>触发词</strong>检测系统，要做到这一点你可能需要去掉神经网络最后一层，然后加入新的输出节点(有时候加入的可能不止一个新的节点，视不同项目而定)，甚至有时候需要加入新的几层去做想要的项目，再次提醒的是，需要根据你的新数据的量的多少去决定你是只需要重新训练网络新的层，还是需要重新训练更多的层。</p>
+<p>那么<strong>迁移学习</strong>什么时候是有意义的呢？<strong>迁移学习起作用的场合是迁移来源的问题中你有很多数据，但是迁移目标的问题中你没有那么多的数据</strong>，例如图像识别任务中你有一百万条数据，因此你有很多数据使得神经网络前面几层学习到如何识别很多有用的特征，但是对于放射科图像的问题中假设你仅有一百条数据，所以你从图像识别的训练中可以学习到很多有用的知识并将其迁移到放射科识别任务的问题中。</p>
+<p>或者说对于语音识别，也许你已经有一万小时的数据训练过你的语言识别系统了，那么你从这一万小时的数据中可以学到很多人类声音的特征，因此在这种情况下预先学到很多人类声音的特征、人类语言的组成部分等等知识，将帮助你建立一个很好的唤醒词检测系统。</p>
+<p>因此总结一下，什么时候迁移学习是有意义的：</p>
+<blockquote>
+<ol>
+<li>当输入都是相同的类型的数据的时候，比如第一个例子中输入都是图像，第二个例子中输入都是音频；</li>
+<li>当任务<strong>A</strong>的数据比任务<strong>B</strong>的数据多得多的时候；</li>
+<li>当任务<strong>A</strong>的低层次特征可以帮助到任务<strong>B</strong>进行学习的时候。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558711790357.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<h3 id="2-8-多任务学习"><a href="#2-8-多任务学习" class="headerlink" title="2.8 多任务学习"></a>2.8 多任务学习</h3><blockquote>
+<p>在多任务学习中，是通过试图让单个神经网络同时做几件事情，然后希望这里的每个任务都能帮助到其他的任务。</p>
+</blockquote>
+<p>假设你现在在研发无人驾驶车辆，那么你的无人驾驶车可能需要同时检验不同的物体，比如检验行人、车辆、停车标志、交通信号灯等。那么对于图中的输入就是那张照片，但是输出不在是一个单一的标签$y^{(i)}$，而是$4$个标签了，因此是一个$4 \times 1$的向量了，而此时总的标签值为：</p>
+<script type="math/tex; mode=display">
+        Y = 
+        \begin{pmatrix}
+        y^{(1)} & y^{(2)} & y^{(3)} & \cdots & y^{(m)} \\
+        \end{pmatrix}</script><script type="math/tex; mode=display">Y \in R^{4 \times m}</script><p>而在之前，$Y \in R^{1 \times m}$<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558712728720.png" alt="Alt text"><br>此时对于这个网络架构的损失函数如下：</p>
+<script type="math/tex; mode=display">Loss = \frac{1}{m} \sum_{i=1}^{m} \sum_{j=1}^{4} \cal{L}(\hat{y}^{(i)}_{j} - y^{(i)}_{j})</script><p>其中损失函数通常为：</p>
+<script type="math/tex; mode=display">\cal{L} = -y^{(i)}·\log{\hat{y}^{(i)}_{j}} - (1 - y^{(i)})·\log{(1 - \hat{y}^{(i)}_{j})}</script><p>需要和<strong>softmax</strong>回归相区别的是，<strong>softmax</strong>回归是将单个标签分配给单个样本(多类别单标签)，而这里的项目中则是一张图片可以有多个不同的标签。以上就是一个多任务学习的例子，因为你是使用单个神经网络观察每张图片然后解决四个问题。当然你可以训练四个不同的神经网络做四件事，但是如果神经网络的早起特征在识别不同的物体时都会用到的话，你会发现训练一个神经网络做四件事会比训练四个完全独立的神经网络分别做四件事的性能更好，这就是多任务学习的力量。</p>
+<p>当然事实证明，多任务学习也可以处理图像只有部分物体被标记的情况，比如在给数据标签的时候，有些样本仅有部分标签的标记，其他的都是问号：</p>
+<script type="math/tex; mode=display">
+        \begin{pmatrix}
+        1 & 1 & \vdots  & ? \\
+        0 & 1 & \vdots  & ? \\
+        ? & ? & \vdots  & 1 \\
+        ? & ? & \vdots  & ? \\
+        \end{pmatrix}</script><p>即使是这样的数据集(只有一小部分标签)，也可以在上面的网络中训练算法同时做四个任务，相应的损失函数就只对带$0$和$1$的标签的$j$值求和，对于问号项，在求和的时候忽略这一项就是了。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558714464869.png" alt="Alt text"></p>
+<p>那么多任务学习在什么时候是有意义的呢？</p>
+<blockquote>
+<ol>
+<li>当你训练的任务可以共用低层次特征的时候，对于无人驾驶来说，交通灯，行人等物体是有相似的特征的，也许能帮你识别停车标志。</li>
+<li>这个准则不是绝对的，所以不一定对。但是很多成功的多任务学习案例中可以看到：如果每个任务的数据量很接近。比如在迁移学习中一个任务<strong>A</strong>有很多的样本可以帮助提升样本量很少的任务<strong>B</strong>去提升性能，而假设在多任务学习中有一百个任务，每个任务的样本数大体有$1000$个，那么对于想要加强某个单任务的表现：比方说第$100$个任务，那么如果单独去完成这个任务，只有$1000$个样本去训练，但是通过其他$99$个任务的训练，这些加起来一共有$99000$个样本，这可能就会大幅度提升算法的性能，可以提供很多的知识来增强这个单个任务的性能。因此需要其他任务加起来的数据量远大于这个单个任务的数据量。</li>
+<li>在训练一个巨大的神经网络的时候同时做好所有的工作。</li>
+<li>根据研究发现，当神经网络不够巨大的时候，多任务的性能会比不上多个神经网络一一对应的各个任务，但是神经网络足够大的时候，多任务学习的性能就会比较好。</li>
+</ol>
+</blockquote>
+<p>实践中多任务学习的使用频率没有迁移学习使用频率高。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558715236374.png" alt="Alt text"></p>
+<h3 id="2-9-端对端学习"><a href="#2-9-端对端学习" class="headerlink" title="2.9 端对端学习"></a>2.9 端对端学习</h3><blockquote>
+<p>以前的一些数据处理系统或者学习系统，它们需要多个阶段的处理，而<strong>端对端学习</strong>则是忽略所有这些不同的阶段，使用单个神经网络代替它。</p>
+</blockquote>
+<p>以语音识别系统为例，输入$x$是一段音频，输出$y$则是这段音频的听写文本。所以传统上，语音识别系统需要很多阶段需要处理：首先你需要提取一些手工设计的音频特征(<strong>例如：MFCC，一种从音频中提取一组特定的人工设计的特征的算法</strong>)；在提取了低级特征之后，应用机器学习算法在音频片段中找到音位(<strong>音位是声音的基本单位</strong>)；然后将音位串在一起构成独立词；最后将词串起来构成音频片段的听写文本。</p>
+<p>因此和这种有很多阶段的流水线相比，<strong>端对端学习</strong>做的是，训练一个巨大的神经网络，输入就是一段音频，而输出直接是听写文本。</p>
+<p><strong>AI</strong>的其中一个有趣的社会学效应是，随着端对<strong>端深度学习系统</strong>(<strong>只需要把训练集拿过来，直觉学习到了x和y的函数映射，直接绕过中间很多步骤</strong>)表现得更好以后，有一些花费了大量时间，甚至是整个事业生涯设计出流水线各个步骤的研究员们(包括像什么语音识别领域，计算机视觉领域等)来说可能就比较难受了。</p>
+<p><strong>端对端学习</strong>的一个挑战是你可能需要<strong>大量的</strong>数据才能够让系统表现良好。如果你的语言识别系统中的数据量大体在$3000$小时，那么传统的流水线性能会更好；但是如果你有比方说$10000$甚至$100000$小时的数据的时候，<strong>端对端学习</strong>性能就会有很大提升。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558749040405.png" alt="Alt text"></p>
+<hr>
+<p>另一个例子是面部识别门禁系统，不过这里不是一步到位，由于存在人员出现在摄像头位置远近各处这个问题，于是将问题拆解成了两个更简单的子任务来处理：</p>
+<blockquote>
+<ol>
+<li>首先运行某个软件来检测人脸，所以第一个检测器找的是人脸的位置；</li>
+<li>检测到人脸之后，放大图像中人脸的那部分(裁切图像，使得人脸居中显示)，然后再将这部分图像喂给网络结构，让网络去学习检测来人的身份。</li>
+</ol>
+</blockquote>
+<p>相较于一步到位，把这个问题分解成更简单的两个步骤更有效：第一步首先弄清楚脸的位置在哪儿；第二步是弄清楚这张脸是谁(通过输入的裁切之后的脸与所有人员的脸进行比较)。<strong>需要注意的是这个两步走的方式之所有有效的一个重要原因就是每一步的数据量都是超级多的，相较而言，一步到位的数据量就很少了(x就是门禁系统拍摄的图像，y是那个人的身份)</strong>。也就是说因为你没有足够的数据去解决这个端对端学习问题，但是你有足够多的数据来解决子问题1和子问题2，因此把这个问题拆解成两个子问题，比纯粹的端对端学习要有更好的效果。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558750056739.png" alt="Alt text"></p>
+<p>其他的例子：机器翻译(超级多的数据)<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558750251455.png" alt="Alt text"></p>
+<h3 id="2-10-是否应该使用端对端学习"><a href="#2-10-是否应该使用端对端学习" class="headerlink" title="2.10 是否应该使用端对端学习"></a>2.10 是否应该使用端对端学习</h3><blockquote>
+<p>给出相应条件，用于判断是否该使用端对端学习。</p>
+</blockquote>
+<p><strong>1. 端对端学习的好处：</strong></p>
+<blockquote>
+<p>1.1 端对端学习只是让数据说话，如果有<strong>足够多的数据</strong>，那么不管从$x$到$y$的映射函数该是什么，如果你训练一个足够大的神经网络，可能更能够根据足够多的数据去捕获数据中的任何统计信息，而不是被迫引入人类的成见。(比如早起的语音识别系统中提出的音位，很有可能就是语音学家臆想出来的一个概念而已，因此让网络自由的学习它想要学习到的内容可能比强迫它跟从人类的成见要得到的结果更好)</p>
+<p>1.2 所需的手工设计组件更少，这样能够简化你的设计工作流程。</p>
+</blockquote>
+<p><strong>2. 端对端学习的坏处：</strong></p>
+<blockquote>
+<p>2.1 需要<strong>大量的数据</strong>(对于一些任务，可以将其通过拆解成多个子任务的方式解决，其中各个子任务的数据量有很多的时候)</p>
+<p>2.2 排除了一些可能很有用的手工组件(对于有些问题，手工组件可能是把人类知识直接注入算法的途径，而这个总不是一件坏事，当你有成吨的数据的时候，手工设计的东西就不太重要了，但是当你数据不足的时候，手工设计的组件可能就很有用了)<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558751922303.png" alt="Alt text"></p>
+</blockquote>
+<p>因此，端对端学习的一个关键就在于数据量是否足够多的。<br>还有一个需要注意的是，在一个很复杂的问题中，并非直接使用端对端就是最好的方法，因为目前能收集到的数据，还有我们现在训练神经网络的能力是有限的，因此某些问题还是需要某些专门的算法才是比较好的结果。<br><img src= "/img/loading.gif" data-src="/2019/05/25/machine-learning-stategy-2/1558752442279.png" alt="Alt text"></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stoner</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2019/05/25/machine-learning-stategy-2/">http://yoursite.com/2019/05/25/machine-learning-stategy-2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com" target="_blank">Stoner的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/">优化策略</a></div><div class="post_share"><div class="social-share" data-image="http://qe0z9wdl5.bkt.clouddn.com/20200725214526.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/05/25/Reference-of-web-page/"><img class="prev-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">近期参考网页(1)</div></div></a></div><div class="next-post pull-right"><a href="/2019/05/24/machine-learning-stategy/"><img class="next-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">机器学习项目优化策略(1)</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/05/24/machine-learning-stategy/" title="机器学习项目优化策略(1)"><img class="relatedPosts_cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2019-05-24</div><div class="relatedPosts_title">机器学习项目优化策略(1)</div></div></a></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By Stoner</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://jerryc.me/" target="_blank" rel="noopener">blog</a>!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button id="readmode" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" title="缩小字体"><i class="fas fa-minus"></i></button><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script defer id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="true"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script>if (document.getElementsByClassName('mermaid').length) {
+  loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',function () {
+    mermaid.initialize({
+      theme: 'default',
+  })
+})
+}</script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script></body></html>

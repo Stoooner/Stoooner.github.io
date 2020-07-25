@@ -1,0 +1,160 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>重要卷积神经网络结构分析 | Stoner的博客</title><meta name="description" content="详细分析多个重要的卷积网络框架.  1. Inception-v1 Networks1.1 1x1卷积 $通过1 \times 1$卷积操作来压缩或者增加输入层的信道数目，从而改变(减少)计算量。  1.2 Inception Module 在构建卷积层的时候，经常会需要决定过滤器的大小究竟是$1 \times 3$、$3 \times 3$还是$5 \times 5$，或者是否需要添加池化层，"><meta name="keywords" content="卷积网络框架"><meta name="author" content="Stoner"><meta name="copyright" content="Stoner"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/2019/06/10/Import-CNN-Framework/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="重要卷积神经网络结构分析"><meta property="og:url" content="http://yoursite.com/2019/06/10/Import-CNN-Framework/"><meta property="og:site_name" content="Stoner的博客"><meta property="og:description" content="详细分析多个重要的卷积网络框架.  1. Inception-v1 Networks1.1 1x1卷积 $通过1 \times 1$卷积操作来压缩或者增加输入层的信道数目，从而改变(减少)计算量。  1.2 Inception Module 在构建卷积层的时候，经常会需要决定过滤器的大小究竟是$1 \times 3$、$3 \times 3$还是$5 \times 5$，或者是否需要添加池化层，"><meta property="og:image" content="http://qe0z9wdl5.bkt.clouddn.com/20200725220150.png"><meta property="article:published_time" content="2019-06-10T05:13:24.000Z"><meta property="article:modified_time" content="2020-07-25T14:02:27.665Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="prev" title="Inception Networks 相关网页" href="http://yoursite.com/2019/06/10/Inception-Network-pages2/"><link rel="next" title="深度学习理论" href="http://yoursite.com/2019/06/10/DeepLearningTheory/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: false,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Stoner的博客" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">62</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content toc-div-class" style="display:none"></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(http://qe0z9wdl5.bkt.clouddn.com/20200725220150.png)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Stoner的博客</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">重要卷积神经网络结构分析</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2019-06-10 13:13:24"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2019-06-10</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2020-07-25 22:02:27"><i class="fas fa-history fa-fw"></i> 更新于 2020-07-25</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><blockquote>
+<p><strong>详细分析多个重要的卷积网络框架.</strong><br><a id="more"></a></p>
+</blockquote>
+<h2 id="1-Inception-v1-Networks"><a href="#1-Inception-v1-Networks" class="headerlink" title="1. Inception-v1 Networks"></a>1. Inception-v1 Networks</h2><h3 id="1-1-1x1卷积"><a href="#1-1-1x1卷积" class="headerlink" title="1.1 1x1卷积"></a>1.1 1x1卷积</h3><blockquote>
+<p>$通过1 \times 1$卷积操作来压缩或者增加输入层的信道数目，从而改变(减少)计算量。<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560128241604.png" alt="Alt text"></p>
+</blockquote>
+<h3 id="1-2-Inception-Module"><a href="#1-2-Inception-Module" class="headerlink" title="1.2 Inception Module"></a>1.2 Inception Module</h3><blockquote>
+<p>在构建卷积层的时候，经常会需要决定过滤器的大小究竟是$1 \times 3$、$3 \times 3$还是$5 \times 5$，或者是否需要添加池化层，而<strong>Inception</strong>网络则帮助你自动的决定如何做出选择。虽然网络架构变得很复杂，但是网络表现却非常的好。<br>以下图为例：<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560128537535.png" alt="Alt text"><br><strong>Inception</strong>模块用来代替人工去确定卷积层中的过滤类型或者是否需要创建卷积层或池化层，上图中输入层的维度为$28 \times 28 \times 192$，假设最上面使用$1 \times 1 \times 192 \times 64$卷积，那么输出为$1 \times 1 \times 64$；如果使用使用$3 \times 3 \times 192 \times 128$，那么输出为$28 \times 28 \times 128$(使用了<strong>SAME</strong>卷积)，然后我们把第二个计算出来的值堆叠到第一个值上面去；接着使用$5 \times 5$以及$MAX-POOLING$层等，以此将结果堆叠在一起。<br>依照上图可以得到：<strong>Inception</strong>模块输入为$28 \times 28 \times 192$，输出为$28 \times 28 \times 256$。<br><strong>Inception网络的基本思想是不需要人为的决定使用哪种过滤器或者是否使用池化，而是由网络自行确定这些参数，你可以为网络添加所有可能的尺寸的过滤器或者池化层，然后把这些输出连接起来，让网络自己学习它需要的参数、采用哪种过滤器组合。</strong><br>但是这里就有一个比较重要的问题了，那就是<strong>计算成本</strong>。<br>我们以上图中$5 \times 5$过滤器为例，计算一下它的计算成本是多少：<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560129417723.png" alt="Alt text"><br>计算成本为：输出的大小代表要计算的数字个数，则这里要计算$28 \times 28 \times 32$个数字，对其中每个数字都需要执行$5 \times 5 \times 192$次乘法运算。所以乘法运算的总的次数为<strong>输出值个数 x 每个输出值需要计算的乘法运算次数 = </strong>$28 \times 28 \times 32 \times 5 \times 5 \times 192 = 1.2 亿$。<br>这是非常高的计算量了，而如果加入$1 \times 1$卷积，则可以将这个计算量缩减到原来的十分之一：<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560130369650.png" alt="Alt text"><br>上图中使用$1 \times 1$卷积将输入压缩到$16$个信道，而中间这个被压缩的层有时候被称为<strong>bottleneck layer(瓶颈层)</strong>，第一层卷积的计算量为($1 \times 1$卷积)：$28 \times 28 \times 16 \times 1 \times 1 \times 192 \approx 240万$，第二层卷积的计算量为: $28 \times 28 \times 32 \times 5 \times 5 \times 16 \approx 1000万$，所以总的计算成本约为<strong>1240万</strong>，相当于上面<strong>1.2亿</strong>的十分之一。<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560131172506.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560131415340.png" alt="Alt text"></p>
+</blockquote>
+<h3 id="1-3-Residual-Networks"><a href="#1-3-Residual-Networks" class="headerlink" title="1.3 Residual Networks"></a>1.3 Residual Networks</h3><blockquote>
+<p><strong>Residual block(残差块)</strong>：<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560132641217.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560132733434.png" alt="Alt text"><br>也就是说上面在深层的网络中加上的这个$a^{[l]}$，产生了一个<strong>残差块</strong>。<br>使用残差块可以训练非常深的神经网络，而<strong>ResNet</strong>就是很多的残差块堆叠在一起组成的一个深度神经网络。<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560133115635.png" alt="Alt text"><br>上图中对于普通的网络来说(作图，没有残差块的网络)，凭着经验会发现随着网络层数的加深，训练错误会先减少，然后增多，但是理论上应该是随着网络层数的加深，应该训练的越来越好才对；但是对于<strong>ResNet</strong>则不同，即便网络再深(即使训练深度达到100层的网络也不例外)，训练的表现却都很不错，<strong>这种方式能够将中间的激活传递到更深的网络中去，有助于解决梯度消失和梯度爆炸问题。</strong><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560133853526.png" alt="Alt text"><br>在上图中，假设对于一个很深的网络后面再添加两层神经网络，并使用残差块结构（这里使用的激活函数为<strong>Relu</strong>），则：</p>
+<script type="math/tex; mode=display">a^{[l+2]} = g(z^{[l+2]} + a^{[l]})</script><script type="math/tex; mode=display">= g(w^{[l+2]}·a^{[l+1]} + b^{[l+2]} + a^{[l]})</script><script type="math/tex; mode=display">如果此时w^{[l+2]}和b^{[l+2]}都为0</script><script type="math/tex; mode=display">= g(a^{[l]})</script><script type="math/tex; mode=display">= a^{[l]} = a^{[l+2]}</script><p><strong>结果表明，残差块学习这个恒等函数并不难，这就意味着即使给神经网络增加两层，它的效率也并不逊色与更简单的神经网络。想象一下，如果添加的这两层网络还学到了一些有用信息的话，那么它比学习恒等函数的表现将更好，那么这样的网络不仅仅保持了网络的效率，而且还提升了网络的效率。</strong><br><strong>另一个需要注意的点是</strong>，假设$z^{[l+2]}$和$a^{[l]}$是具有相同的维度的，所以在<strong>ResNet</strong>中使用了很多的<strong>SAME</strong>卷积，<br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560134986732.png" alt="Alt text"></p>
+</blockquote>
+<h2 id="2-Inception-v3-Network"><a href="#2-Inception-v3-Network" class="headerlink" title="2. Inception-v3 Network"></a>2. Inception-v3 Network</h2><p><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560147519168.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560148453948.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560148694586.png" alt="Alt text"></p>
+<hr>
+<p><strong>网络结构图中第一次出现的三个模块组：</strong><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560149370767.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560149488062.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560149503984.png" alt="Alt text"></p>
+<hr>
+<p><strong>网络结构图中第二次出现的五个模块组：</strong><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560149729631.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560150090714.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560150129838.png" alt="Alt text"><br><strong>这种既不改变空间分辨率，又不改变特征通道数的做法是为了把不同通道的特征给融合起来。</strong><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560150349813.png" alt="Alt text"></p>
+<hr>
+<p><strong>网络结构图中第三次出现的三个模块组：</strong><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560150514126.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560150688225.png" alt="Alt text"></p>
+<h2 id="3-Inception-v4-Network"><a href="#3-Inception-v4-Network" class="headerlink" title="3. Inception-v4 Network"></a>3. Inception-v4 Network</h2><p><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560151352648.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560151643979.png" alt="Alt text"><br><strong>所谓特征融合其实就是将多个特征通道的值融合成一个数；而特征通道压缩指的是输出的特征通道的数目小于输入的特征通道的数目。</strong><br><strong>Branch1中的平均池化是对特征图做了一个空间模糊，而空间模糊则相当于对原来的特征图可能存在的一些噪音给去掉，而Branch2不使用对特征图进行空间模糊的平均池化是因为，空间模糊还有可能把真正有用的边缘信息或者物体的边缘轮廓也给去掉，因此下面采用折中的方式将两种方式都采用。</strong><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560153363346.png" alt="Alt text"></p>
+<hr>
+<p><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560153739082.png" alt="Alt text"><br><strong>需要注意的是将一个</strong>$n \times n$<strong>的卷积分解成</strong>$1 \times n$<strong>和</strong>$n \times 1$<strong>的卷积</strong> <strong>相当于增加了非线性映射的深度。</strong><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560154116572.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560154845267.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560155421987.png" alt="Alt text"></p>
+<hr>
+<p><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560155829143.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560156112315.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560156848895.png" alt="Alt text"></p>
+<h2 id="4-Residual-Networks"><a href="#4-Residual-Networks" class="headerlink" title="4. Residual Networks"></a>4. Residual Networks</h2><p><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560156959897.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157028430.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157150706.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157174268.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157276393.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157408304.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157588198.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157721323.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560157892573.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560158197277.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560158240945.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560158492223.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560158554251.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560158694678.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560158779559.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560158839431.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159089731.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159180492.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159271653.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159333154.png" alt="Alt text"></p>
+<h2 id="5-Inception-ResNet-v1-v2"><a href="#5-Inception-ResNet-v1-v2" class="headerlink" title="5. Inception-ResNet-v1,v2"></a>5. Inception-ResNet-v1,v2</h2><p><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159430770.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159672226.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159757091.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159832467.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560159973808.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160026383.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160130969.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160183813.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160235461.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160525435.png" alt="Alt text"></p>
+<h2 id="6-SqueezeNet"><a href="#6-SqueezeNet" class="headerlink" title="6. SqueezeNet"></a>6. SqueezeNet</h2><p><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160669640.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160711543.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160738129.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160762977.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160802319.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560160934523.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560161024034.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560161120186.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560161183724.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560161195229.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/06/10/Import-CNN-Framework/1560161258736.png" alt="Alt text"></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stoner</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2019/06/10/Import-CNN-Framework/">http://yoursite.com/2019/06/10/Import-CNN-Framework/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com" target="_blank">Stoner的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E6%A1%86%E6%9E%B6/">卷积网络框架</a></div><div class="post_share"><div class="social-share" data-image="http://qe0z9wdl5.bkt.clouddn.com/20200725214526.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/06/10/Inception-Network-pages2/"><img class="prev-cover" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200725220041.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Inception Networks 相关网页</div></div></a></div><div class="next-post pull-right"><a href="/2019/06/10/DeepLearningTheory/"><img class="next-cover" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200725220312.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">深度学习理论</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By Stoner</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://jerryc.me/" target="_blank" rel="noopener">blog</a>!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button id="readmode" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" title="缩小字体"><i class="fas fa-minus"></i></button><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script defer id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="true"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script>if (document.getElementsByClassName('mermaid').length) {
+  loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',function () {
+    mermaid.initialize({
+      theme: 'default',
+  })
+})
+}</script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script></body></html>

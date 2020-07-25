@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tensorflow-GPU with Win10 Installing | Stoner的博客</title><meta name="description" content="记录在win10上TensorFlow-GPU版本的安装过程  1. 系统配置    配置 对应版本     系统 win10   内存 8.0G   显卡 NVIDIA GeForce GTX 1050   python版本 python 3.7.0 + python 3.6.2(Anaconda新建的一个环境)   Anaconda版本 Anaconda3-5.3.0-Windows-x86"><meta name="keywords" content="win10,tensorflow-gpu"><meta name="author" content="Stoner"><meta name="copyright" content="Stoner"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/2019/05/22/tensorflow-gpu-win10-installing/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="Tensorflow-GPU with Win10 Installing"><meta property="og:url" content="http://yoursite.com/2019/05/22/tensorflow-gpu-win10-installing/"><meta property="og:site_name" content="Stoner的博客"><meta property="og:description" content="记录在win10上TensorFlow-GPU版本的安装过程  1. 系统配置    配置 对应版本     系统 win10   内存 8.0G   显卡 NVIDIA GeForce GTX 1050   python版本 python 3.7.0 + python 3.6.2(Anaconda新建的一个环境)   Anaconda版本 Anaconda3-5.3.0-Windows-x86"><meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><meta property="article:published_time" content="2019-05-22T15:29:11.000Z"><meta property="article:modified_time" content="2019-05-23T12:57:44.000Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="prev" title="剑指Offer部分题解" href="http://yoursite.com/2019/05/23/Sword-to-Offer/"><link rel="next" title="Weights of Predictions of Pigs" href="http://yoursite.com/2019/05/22/Weights-Pred-of-Pigs/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: false,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Stoner的博客" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">62</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-系统配置"><span class="toc-number">1.</span> <span class="toc-text">1. 系统配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-TensorFlow-CPU安装"><span class="toc-number">2.</span> <span class="toc-text">2. TensorFlow-CPU安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-安装过程"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 安装过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-TensorFlow-GPU安装"><span class="toc-number">3.</span> <span class="toc-text">3. TensorFlow-GPU安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-搭建新的环境"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 搭建新的环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-安装TensorFlow—GPU"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 安装TensorFlow—GPU</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-软件需求："><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 软件需求：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-2-VC库安装："><span class="toc-number">3.2.2.</span> <span class="toc-text">3.2.2 VC库安装：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-3-CUDA-cuDNN安装"><span class="toc-number">3.2.3.</span> <span class="toc-text">3.2.3 CUDA+cuDNN安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-安装过程中遇到的一些问题"><span class="toc-number">4.</span> <span class="toc-text">4. 安装过程中遇到的一些问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Numpy版本不对"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 Numpy版本不对</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-CUDA9-0版本问题"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 CUDA9.0版本问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-其他问题："><span class="toc-number">4.3.</span> <span class="toc-text">4.3 其他问题：</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Stoner的博客</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Tensorflow-GPU with Win10 Installing</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2019-05-22 23:29:11"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2019-05-22</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2019-05-23 20:57:44"><i class="fas fa-history fa-fw"></i> 更新于 2019-05-23</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><blockquote>
+<p><strong>记录在win10上TensorFlow-GPU版本的安装过程</strong><br><a id="more"></a></p>
+</blockquote>
+<h2 id="1-系统配置"><a href="#1-系统配置" class="headerlink" title="1. 系统配置"></a>1. 系统配置</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">配置</th>
+<th style="text-align:right">对应版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">系统</td>
+<td style="text-align:right">win10</td>
+</tr>
+<tr>
+<td style="text-align:left">内存</td>
+<td style="text-align:right">8.0G</td>
+</tr>
+<tr>
+<td style="text-align:left">显卡</td>
+<td style="text-align:right">NVIDIA GeForce GTX 1050</td>
+</tr>
+<tr>
+<td style="text-align:left">python版本</td>
+<td style="text-align:right">python 3.7.0 + python 3.6.2(Anaconda新建的一个环境)</td>
+</tr>
+<tr>
+<td style="text-align:left">Anaconda版本</td>
+<td style="text-align:right">Anaconda3-5.3.0-Windows-x86_64.exe(对应python3.7.0环境)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="2-TensorFlow-CPU安装"><a href="#2-TensorFlow-CPU安装" class="headerlink" title="2. TensorFlow-CPU安装"></a>2. TensorFlow-CPU安装</h2><h3 id="2-1-安装过程"><a href="#2-1-安装过程" class="headerlink" title="2.1 安装过程"></a>2.1 安装过程</h3><blockquote>
+<p>网上关于TensorFlow的安装的文章到处都是，有些讲的乱七八糟的，由于每个人的需求以及环境不尽相同，因此整个安装过程耗费了好几个晚上的时间，Anaconda库来来回回安装和卸载了好多次，在此将整个安装过程记录下来，以备自己以后安装的时候有个参考.<br>CPU版本的TensorFlow安装很方便，一般不会出现什么大的问题，步骤也很简单，主要如下：<br>2.1.1 首先需要安装python环境，这里直接使用集成了各个科学计算库的+python的Anaconda来安装python环境，<a href="https://www.anaconda.com/distribution/" target="_blank" rel="noopener">Anaconda连接在此：</a><br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538368639.png" alt="Alt text"></p>
+<p>2.1.2 需要注意的是，安装python的版本和Anaconda的版本是相互有对应的，这里给出这种图(<a href="https://blog.csdn.net/yuejisuo1948/article/details/81043823" target="_blank" rel="noopener">图片来源连接</a>)：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538389057.png" alt="Alt text"></p>
+<p>首先解释一下上表。 anaconda在每次发布新版本的时候都会给python3和python2都发布一个包，版本号是一样的。表格中，python版本号下方的离它最近的anaconda包就是包含它的版本。举个例子，假设你想安装python2.7.14，在表格中找到它，它下方的三个anaconda包（anaconda2-5.0.1、5.1.0、5.2.0）都包含python2.7.14；假设你想安装python3.6.5，在表格中找到它，它下方的anaconda3-5.2.0就是你需要下载的包；假设你想安装python3.7.0，在表格中找到它，它下方的anaconda3-5.3.0或5.3.1就是你需要下载的包；<br>2.1.3 安装Anaconda的过程就不在详述了，安装完成之后可以看到如下：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538400662.png" alt="Alt text"></p>
+<p>2.1.4 需要注意python的版本和TensorFlow的版本，很多时候安装失败是由于安装了最新版的python，而最新版的python对当时的TensorFlow支持度不够友好所致。<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538410126.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538419560.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538428675.png" alt="Alt text"></p>
+<p>2.1.5 安装的时候可以直接在cmd下面运行：<code>pip install tensorflow</code>即可，这样安装的是cpu版本，且会安装当时最新的TensorFlow版本，但是由于上面所说的TensorFlow和python版本不匹配的问题，这样的方式安装可能会造成无法找到TensorFlow的报错问题，且由于这样的方式并未补充TensorFlow具体的版本号，所以可能造成找不到指定版本号TensorFlow的错误；还可以指定具体的TensorFlow版本号进行安装，这样可以避免大部分错误：<br><code>pip3 install --upgrade https://storage.googleapis.com/tensorflow/windows/cpu/tensorflow-0.12.0-cp35-cp35m-win_amd64.whl</code><br>除了这个之外还可以在<strong>Anaconda Prompt</strong>中使用<strong>conda</strong>命令进行安装，在此不再赘述，请自行百度或者谷歌。</p>
+</blockquote>
+<h2 id="3-TensorFlow-GPU安装"><a href="#3-TensorFlow-GPU安装" class="headerlink" title="3. TensorFlow-GPU安装"></a>3. TensorFlow-GPU安装</h2><h3 id="3-1-搭建新的环境"><a href="#3-1-搭建新的环境" class="headerlink" title="3.1 搭建新的环境"></a>3.1 搭建新的环境</h3><blockquote>
+<p>由于担心安装了python3.7.0版本的Anaconda之后会出现对当前版本的TensorFlow不兼容从而造成各种错误的情况，参考网上的方式在Anaconda下搭建了基于python3.6.2的环境方便搭建GPU版本，过程如下：</p>
+<ol>
+<li>右键管理员启动Anaconda Prompt；</li>
+<li>创建python36的环境：<code>conda creat --name python36 python=3.6</code></li>
+<li>进入(激活)python36环境：<code>conda activate python36</code></li>
+<li>如果有需要回到python3.7：<code>conda deactivate</code></li>
+<li>安装成功之后可以看到：<img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538444899.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<h3 id="3-2-安装TensorFlow—GPU"><a href="#3-2-安装TensorFlow—GPU" class="headerlink" title="3.2 安装TensorFlow—GPU"></a>3.2 安装TensorFlow—GPU</h3><h4 id="3-2-1-软件需求："><a href="#3-2-1-软件需求：" class="headerlink" title="3.2.1 软件需求："></a>3.2.1 软件需求：</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">工具</th>
+<th style="text-align:right">对应版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">NVIDIA® GPU drivers</td>
+<td style="text-align:right">CUDA 9.0 requires 384.x or higher</td>
+</tr>
+<tr>
+<td style="text-align:left">CUDA® Toolkit</td>
+<td style="text-align:right">cuda_9.0.176_win10.exe</td>
+</tr>
+<tr>
+<td style="text-align:left">cuDNN SDK</td>
+<td style="text-align:right">cudnn-9.0-windows10-x64-v7.4.2.24.zip</td>
+</tr>
+<tr>
+<td style="text-align:left">VC库</td>
+<td style="text-align:right">Microsoft Visual C++ 2015 + Visual Studio 2017</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<ol>
+<li>需要注意CUDA的版本和cuDNN的版本也是需要匹配的，否则没办法使用(版本对应见上面的图);</li>
+<li>Visual studio 2015: 这个版本和CUDA8.0和CUDA9.0都兼容，VS2017和CUDA8.0不兼容，与CUDA9.0兼容.</li>
+</ol>
+</blockquote>
+<h4 id="3-2-2-VC库安装："><a href="#3-2-2-VC库安装：" class="headerlink" title="3.2.2 VC库安装："></a>3.2.2 VC库安装：</h4><blockquote>
+<ol>
+<li><p>打开<a href="https://visualstudio.microsoft.com/zh-hans/vs/older-downloads/?rr=https://tensorflow.google.cn/install/source_windows" target="_blank" rel="noopener">微软网站</a>，下载并安装以下两个库：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538461732.png" alt="Alt text"></p>
+</li>
+<li><p>再进入<a href="https://visualstudio.microsoft.com/zh-hans/downloads/" target="_blank" rel="noopener">VS网站</a>，下载并安装VS2017社区版；<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538469358.png" alt="Alt text"></p>
+</li>
+</ol>
+</blockquote>
+<h4 id="3-2-3-CUDA-cuDNN安装"><a href="#3-2-3-CUDA-cuDNN安装" class="headerlink" title="3.2.3 CUDA+cuDNN安装"></a>3.2.3 CUDA+cuDNN安装</h4><blockquote>
+<p>需要注意的是CUDA和cuDNN也都是需要匹配相应版本的哈，所以请注意想要的版本，上面的图有对应的版本。</p>
+<ol>
+<li>登录<a href="https://developer.nvidia.com/cuda-toolkit-archive" target="_blank" rel="noopener">CUDA官网</a>选择相应的版本下载。这里下载cuda_9.0.176_win10.exe，以及补丁patch2、3、4（patch1安装不上，可以不安装，<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538483321.png" alt="Alt text"></li>
+</ol>
+<p>1.1 文件解压，解压地方默认就好了：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538491079.png" alt="Alt text"></p>
+<p>1.2 系统兼容性，这个地方我的笔记本系统兼容性检测说无法识别硬件,是否要继续！”This graphics driver could not find compatible graphics hardware…“，这个地方可能是“因为笔记本厂商一般都给自己的机器采用的显卡添加了独特的硬件ID，导致CUDA没有包含这个ID，驱动认不出显卡”，但是也不用担心，可以继续往下安装：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538502008.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538508346.png" alt="Alt text"></p>
+<p>1.3 安装选择高级，勾选内容部分我是把所有已经安装的驱动的勾点掉了，只安装没有的驱动，安装路径默认了，在这个地方可以记录一下自己安装的文件路径：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538518814.png" alt="Alt text"></p>
+<p>1.4 更新CUDA、Driver（不更新的话有可能导致NVIDIA控制面板打不开）、physx：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538526444.png" alt="Alt text"></p>
+<p>1.5 安装位置不需要改变，后面过程直接下一步即可：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538534652.png" alt="Alt text"></p>
+<p>1.6 在安装的时候最好使用管理员权限进行安装，安装成功之后界面如下图：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538542136.png" alt="Alt text"></p>
+<p>检验CUDA是否安装成功：打开<code>CMD</code>，输入<code>nvcc -V</code><br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538549478.png" alt="Alt text"></p>
+<ol>
+<li>登录<a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">cuDNN官方网站</a>下载对应版本的cuDNN，这里就是cudnn-9.0-windows10-x64-v7.4.2.24.zip：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538592127.png" alt="Alt text"></li>
+</ol>
+<p>下载完毕解压会看到3个文件夹如下：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538602305.png" alt="Alt text"></p>
+<p>下载完成后解压缩。里面有bin、include、lib三个目录，将三个文件夹内容复制到安装CUDA的地方覆盖对应文件夹内容，CUDA默认文件夹在：C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0</p>
+<ol>
+<li>添加环境变量：检查一下环境变量 我的电脑—&gt; 属性—&gt; 高级系统设置—&gt; 环境变量—&gt;系统变量中加入CUDA 的bin所在目录环境，在用户环境变量中加入<strong>C:\ProgramData\NVIDIA GPU Computing Toolkit\v9.0\bin</strong>：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538618494.png" alt="Alt text"></li>
+</ol>
+<p>如何cuDNN验证是否安装成功？cuDNN无法直接验证安装成功，在之后TensorFlow-GPU安装完毕后，import tensorflow as tf 若报错ImportError: Could not find ‘cudnn64_7.dll’.则证明安装失败。</p>
+<ol>
+<li>安装TensorFlow：<br>4.1 在windows程序中找到Anaconda Promt并打开，输入命令：<code>activate python36</code><br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538647698.png" alt="Alt text"></li>
+</ol>
+<p>4.2 然后输入对应的命令：<br><code>pip install --ignore-installed --upgrade</code> <code>https://storage.googleapis.com/tensorflow/windows/gpu/tensorflow_gpu-1.12.0-cp35-cp35m-win_amd64.whl</code><br>或者直接下载：<code>pip3 install --upgrade tensorflow-gpu</code><br>经过长时间的安装等待之后如果导入TensorFlow成功则大功告成，如果想要在pycharm下使用到gpu版的TensorFlow，只需要在解释器那里选择python36环境下的python.exe就可以了：<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538659711.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538666047.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538673299.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538679441.png" alt="Alt text"></p>
+</blockquote>
+<h2 id="4-安装过程中遇到的一些问题"><a href="#4-安装过程中遇到的一些问题" class="headerlink" title="4. 安装过程中遇到的一些问题"></a>4. 安装过程中遇到的一些问题</h2><h3 id="4-1-Numpy版本不对"><a href="#4-1-Numpy版本不对" class="headerlink" title="4.1 Numpy版本不对"></a>4.1 Numpy版本不对</h3><blockquote>
+<p>在<code>pip install tensorflow</code>之后出现如下问题：</p>
+<blockquote>
+<p><strong>twisted 18.7.0 requires PyHamcrest&gt;=1.9.0, which is not installed</strong>，且在系统提示install satisfied的情况下，python导入TensorFlow库报错：<img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538692903.png" alt="Alt text"></p>
+</blockquote>
+</blockquote>
+<p>，查询之后升级numpy可以正常导入TensorFlow：<code>pip install -U numpy</code> ,numpy从1.15.1升级到1.16.3.</p>
+<blockquote>
+<p><a href="https://www.cnblogs.com/Terrypython/p/10467859.html" target="_blank" rel="noopener">https://www.cnblogs.com/Terrypython/p/10467859.html</a></p>
+</blockquote>
+<h3 id="4-2-CUDA9-0版本问题"><a href="#4-2-CUDA9-0版本问题" class="headerlink" title="4.2 CUDA9.0版本问题"></a>4.2 CUDA9.0版本问题</h3><blockquote>
+<p>我在安装CUDA8.0的时候遇到了如下问题：The graphics driver could not find compatible graphics hardware。这个问题的主要原因是你本机的显卡驱动版本比CUDA8.0中自带的驱动版本高（实际上，不论CUDA装的哪个版本，只要本机驱动比CUDA自带驱动版本高，都可能出现这个问题）。<br>解决办法：<br>直接点击继续—&gt;同意并继续—&gt;自定义（高级）—&gt;只选择CUDA进行安装，最后安装成功。 在自定义界面可以看到CUDA自带驱动版本号以及目前本机驱动版本号，如果本机版本号高于CUDA自带版本号，就不要再勾选安装了。<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538702894.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538708280.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538713313.png" alt="Alt text"></p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538718818.png" alt="Alt text"></p>
+<p>除此之外，如果安装CUDA9.0直接失败的话，请先将win10的更新打开并将win10更新到最新版本，然后再更新你的GPU的驱动，驱动请勿去驱动人生或者驱动之家下载，我在这两家下载之后造成GPU驱动无法安装等情况，请使用<strong>GeForce Experience</strong>进行驱动的更新下载。<br><img src= "/img/loading.gif" data-src="/2019/05/22/tensorflow-gpu-win10-installing/1558538731468.png" alt="Alt text"></p>
+</blockquote>
+<h3 id="4-3-其他问题："><a href="#4-3-其他问题：" class="headerlink" title="4.3 其他问题："></a>4.3 其他问题：</h3><blockquote>
+<ol>
+<li><a href="https://blog.csdn.net/Halsey_/article/details/88411095" target="_blank" rel="noopener">DLL load failed: 找不到指定的模块</a></li>
+<li><a href="https://blog.csdn.net/sinat_27917465/article/details/83656494" target="_blank" rel="noopener">安装 Tensorflow-gpu 问题及解决</a></li>
+</ol>
+</blockquote>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stoner</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2019/05/22/tensorflow-gpu-win10-installing/">http://yoursite.com/2019/05/22/tensorflow-gpu-win10-installing/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com" target="_blank">Stoner的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/win10/">win10</a><a class="post-meta__tags" href="/tags/tensorflow-gpu/">tensorflow-gpu</a></div><div class="post_share"><div class="social-share" data-image="http://qe0z9wdl5.bkt.clouddn.com/20200725214526.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/05/23/Sword-to-Offer/"><img class="prev-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">剑指Offer部分题解</div></div></a></div><div class="next-post pull-right"><a href="/2019/05/22/Weights-Pred-of-Pigs/"><img class="next-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Weights of Predictions of Pigs</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By Stoner</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://jerryc.me/" target="_blank" rel="noopener">blog</a>!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button id="readmode" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" title="缩小字体"><i class="fas fa-minus"></i></button><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script defer id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="true"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script>if (document.getElementsByClassName('mermaid').length) {
+  loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',function () {
+    mermaid.initialize({
+      theme: 'default',
+  })
+})
+}</script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script></body></html>

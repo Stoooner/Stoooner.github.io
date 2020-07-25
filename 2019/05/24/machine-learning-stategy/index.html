@@ -1,0 +1,265 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>机器学习项目优化策略(1) | Stoner的博客</title><meta name="description" content="非常详细的机器学习和深度学习优化策略.  1. 为什么是ML策略假设你现在有一个识别猫的项目准确率达到了$90 \%$，此时你可能有很多的想法去改善优化你的系统，比如：当你在尝试优化一个深度学习项目的时候，你通常可以有很多想法可以尝试，但是问题在于如果你做了错误的选择的时候，你完全有可能浪费6个月的时候往错误的方向前进，而在6个月之后才意识到这个方法更本不管用。 2. 正交化(Orthogona"><meta name="keywords" content="机器学习,深度学习,优化策略"><meta name="author" content="Stoner"><meta name="copyright" content="Stoner"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/2019/05/24/machine-learning-stategy/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="机器学习项目优化策略(1)"><meta property="og:url" content="http://yoursite.com/2019/05/24/machine-learning-stategy/"><meta property="og:site_name" content="Stoner的博客"><meta property="og:description" content="非常详细的机器学习和深度学习优化策略.  1. 为什么是ML策略假设你现在有一个识别猫的项目准确率达到了$90 \%$，此时你可能有很多的想法去改善优化你的系统，比如：当你在尝试优化一个深度学习项目的时候，你通常可以有很多想法可以尝试，但是问题在于如果你做了错误的选择的时候，你完全有可能浪费6个月的时候往错误的方向前进，而在6个月之后才意识到这个方法更本不管用。 2. 正交化(Orthogona"><meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><meta property="article:published_time" content="2019-05-23T16:04:43.000Z"><meta property="article:modified_time" content="2020-07-25T12:09:22.121Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="prev" title="机器学习项目优化策略(2)" href="http://yoursite.com/2019/05/25/machine-learning-stategy-2/"><link rel="next" title="剑指Offer部分题解" href="http://yoursite.com/2019/05/23/Sword-to-Offer/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: false,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Stoner的博客" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">62</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content toc-div-class" style="display:none"></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Stoner的博客</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">机器学习项目优化策略(1)</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2019-05-24 00:04:43"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2019-05-24</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2020-07-25 20:09:22"><i class="fas fa-history fa-fw"></i> 更新于 2020-07-25</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5/">机器学习策略</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><blockquote>
+<p><strong>非常详细的机器学习和深度学习优化策略.</strong><br><a id="more"></a></p>
+</blockquote>
+<h2 id="1-为什么是ML策略"><a href="#1-为什么是ML策略" class="headerlink" title="1. 为什么是ML策略"></a>1. 为什么是ML策略</h2><p>假设你现在有一个识别猫的项目准确率达到了$90 \%$，此时你可能有很多的想法去<strong>改善优化</strong>你的系统，比如：<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558593688809.png" alt="Alt text"><br>当你在尝试优化一个深度学习项目的时候，你通常可以有很多想法可以尝试，但是问题在于如果你做了错误的选择的时候，你完全有可能浪费6个月的时候往错误的方向前进，而在6个月之后才意识到这个方法更本不管用。</p>
+<h2 id="2-正交化-Orthogonalization"><a href="#2-正交化-Orthogonalization" class="headerlink" title="2. 正交化(Orthogonalization)"></a>2. 正交化(Orthogonalization)</h2><p>下面是两个正交化的例子：<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558594429173.png" alt="Alt text"></p>
+<p>要想得到一个好的监督学习系统，你需要调节系统的参数来确保四件事：</p>
+<blockquote>
+<ol>
+<li>首先确保在训练集上得到的结果不错(<strong>Fit training set well on cost function</strong>)，所以训练集的表现必须通过某种评估达到可接受的程度，这意味着对于某一些应用来说这可能需要达到人类平均水平的表现;</li>
+<li>在训练集上达到不错的表现之后，接着就要在开发集(<strong>Dev_set</strong>)/交叉验证集希望达到好的表现(<strong>Fit dev set well on cost function</strong>);</li>
+<li>在测试集上达到不错的表现(<strong>Fit test set well on cost function</strong>);</li>
+<li>最后在实际的使用中达到令人满意的表现(<strong>Performs well in real world</strong>).</li>
+</ol>
+</blockquote>
+<p>因此在优化你的项目过程中:</p>
+<blockquote>
+<ol>
+<li>如果算法在<strong>cost function</strong>上不能够很好的拟合训练集的时候，你需要设置一组特定的旋钮来调整你的算法，来更好的拟合训练集，而这些旋钮可能是: </li>
+</ol>
+<ul>
+<li><strong>①训练更大的网络</strong>；</li>
+<li><strong>②切换更好的优化算法——Adam or other</strong>；</li>
+<li><strong>③….</strong></li>
+</ul>
+<ol>
+<li>如果在开发集上拟合效果很差的话，这时候就需要另一些独立正交(<strong>orthogonalization</strong>)的旋钮：</li>
+</ol>
+<ul>
+<li><strong>①regularization</strong>；</li>
+<li><strong>②增大训练集</strong>；</li>
+<li><strong>③…</strong></li>
+</ul>
+<ol>
+<li>如果在上面两个中都拟合的很好，但是在测试集中效果不好的话，另一组正交旋钮：</li>
+</ol>
+<ul>
+<li><strong>①更大的开发集(因为如果在开发集中效果好，但是测试集中效果不好说明模型对开发集过拟合了)</strong>；</li>
+<li><strong>②…</strong></li>
+</ul>
+<ol>
+<li>如果在实际使用中表现不好那么：</li>
+</ol>
+<ul>
+<li><strong>①改变开发集或者成本函数(因为根据某个成本函数，系统在测试集上表现很好，但是在实际应用中效果不好，那么意味着你的开发集的分布设置的不对，或者你的成本函数测量指标不对)</strong><br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558595870814.png" alt="Alt text"></li>
+</ul>
+</blockquote>
+<h2 id="3-单一数字评估指标"><a href="#3-单一数字评估指标" class="headerlink" title="3. 单一数字评估指标"></a>3. 单一数字评估指标</h2><p>无论是调整超参数，或者是尝试不同的学习算法，或者是在搭建机器学习系统的时候尝试其他不同的手段，如果使用单一数字评估指标，你的进展会加快很多，它可以快速的告诉你新尝试的手段是否比之前的手段要好. <strong>所以在开始一个机器学习项目的时候，一个比较好的措施是为对应的项目问题设置一个单实数评估指标.</strong><br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558602946574.png" alt="Alt text"></p>
+<p>如果对于项目中有多个评估指标的，比方说分类中的<strong>查准率(Precision)</strong>和<strong>查全率(Recall)</strong>，这个时候就可以将其合并在一起得到一个单一的数字评估指标——<strong>F1 Score</strong>.</p>
+<p>对于很多机器学习团队来说，他们有一个明确的<strong>开发集(Dev_set)</strong>用来测量<strong>查准率</strong>和<strong>查全率</strong>(对于分类来说，如果是别的不同的项目则使用开发集去测量别的指标)，再加上一个<strong>单一数值评估指标(单实数评估指标)</strong>用于判断不同的模型之间谁更优，这样可以加速改进你的机器学习算法的迭代过程.</p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558604227078.png" alt="Alt text"></p>
+<h2 id="4-满足和优化指标"><a href="#4-满足和优化指标" class="headerlink" title="4. 满足和优化指标"></a>4. 满足和优化指标</h2><p>有时候要把所有估计的事情组合成单实数评估指标并不是一件容易的事情，这个时候可能就需要用到<strong>满足</strong>和<strong>优化</strong>指标很重要了.</p>
+<p><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558604481135.png" alt="Alt text"><br>依旧以猫分类器这个机器学习项目为例，左边是多个分类器的<strong>准确率指标</strong>(也可是别的评估指标), 右边是另一个我们不得不考虑的另一个指标：<strong>分类一张图片所需的时间</strong>. 当然这里可以将<strong>准确率</strong>和<strong>运行时间</strong>组合成一个整体的评估指标，例如总体成本为: $Cost = Accuracy - 0.5·RunningTime$，但是对于这两个指标来说，这种方式可能以一种过于刻意的方式将其组合起来了. </p>
+<p>这里可以有另一种方式：比如你可以选择一个分类器能够最大限度的提高准确率，但同时必须满足运行时间要求(假设上限为<strong>100 ms</strong>)，此时我们就说<strong>准确率</strong>是一个<strong>优化指标(Optimizing Metric)</strong>,因为你想最大化它；而运行时间就是满足指标(<strong>Satisficing Metric</strong>)，因为你只要满足小于<strong>100 ms</strong>的要求后你就可以不用在乎这个指标有多好了或者说至少没那么在乎了，因为实际在运行的时候小于<strong>100 ms</strong>，你的用户就不会在乎了，不管是<strong>80 ms</strong>还是<strong>50 ms</strong>. 所以这是一个相当相当合理的权衡方式，或者说将准确度和运行时间结合起来的方式.</p>
+<p>更加一般的来说，如果你有<strong>N</strong>个指标需要考虑的时候，有时候选择其中一个指标作为<strong>优化指标</strong>是合理的，然后你就尽力去优化它；然后把剩下的<strong>N-1</strong>个指标作为<strong>满足指标</strong>，意思就是只要他们达到一定阈值以后，超过阈值多少之后的表现就变得没那么重要了.</p>
+<hr>
+<p>另一个例子：假设你正在构建一个系统来检测唤醒语，也叫触发词.<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558606240799.png" alt="Alt text"></p>
+<hr>
+<p><strong>Summy: </strong></p>
+<blockquote>
+<p>当你需要顾及多个指标的时候，比如有一个优化指标需要尽可能的优化，然后还有一个或者多个满足指标需要达到一定门槛的时候，上面的方式就是一个在观察多个<strong>cost</strong>的时候选择最优的那个方法.</p>
+</blockquote>
+<h2 id="5-训练-开发-测试集的划分"><a href="#5-训练-开发-测试集的划分" class="headerlink" title="5. 训练/开发/测试集的划分"></a>5. 训练/开发/测试集的划分</h2><blockquote>
+<p><strong>Dev_Set = Development Set = Cross Validation Set</strong></p>
+</blockquote>
+<p>设置<strong>训练集/开发集/测试集</strong>的方式将会大大影响团队在建立机器学习应用方面取得进展的速度。设定完毕之后使用<strong>训练集</strong>训练多个不同的模型，然后使用<strong>开发集</strong>来评估不同的模型，选择最好的一个，然后不断迭代去改善开发集的性能直到最后得到一个令你满意的<strong>cost</strong>，最后再在测试集上进行评估.</p>
+<p>依旧是一猫分类器作为例子，假设你在一下区域运营：<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558612555796.png" alt="Alt text"><br>那么你应该在以上区域中如何设置<strong>开发集</strong>以及<strong>测试集</strong>呢？其中一种做法是你随机的在其中4个区域选择做<strong>开发集</strong>，然后在另外4个区域中选择做<strong>测试集</strong>，试试证明<strong>这个想法是非常糟糕的</strong>，因为这样的话你的<strong>你的开发集和测试集是来自不同的分布的</strong>，正确的做法是要确保两个集合来自相同的分布。</p>
+<p>设立你的<strong>开发集</strong>加上一个<strong>单实数评估指标</strong>就像定下目标，然后告诉你的团队要做的就是瞄准靶心，因为一旦建立这样<strong>开发集</strong>和<strong>指标</strong>以后，团队就可以快速迭代，尝试不同的想法，跑实验，直到选出最好的模型。但是上面的例子中设立的<strong>开发集</strong>和<strong>测试集</strong>在跑完模型之后，由于两个集合的分布差异巨大，最后发现努力了几个月的结果最后在测试集上却表现不佳。就像训练调参的时候设定的靶心在一个方向，结果在测试的时候却需要对准另一个放心的靶心一样。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558613433325.png" alt="Alt text"></p>
+<p>所以为了避免以上的问题，比较好的做法是：<strong>将所有数据进行随机洗牌，然后在进行开发集和测试集的划分，这样使得两个集合的数据来自同一个分布</strong>.</p>
+<hr>
+<p>另一个例子是这样的：<br>项目是包含中等收入邮政编码的贷款审批数据，当输入为贷款申请，项目要做的就是预测输出为是否有还贷能力？这套系统用于帮助银行判断是否批准贷款。所以<strong>开发集</strong>来自贷款申请，这些贷款申请来自中等收入邮政编码(<strong>Zip Code</strong>)。</p>
+<p>当在上面数据训练几个月之后，团队突然决定要在低收入邮政编码上测试一下，当然，中等收入和低收入邮政编码的数据分布是很不一样的，虽然他们花了大量的时间针对前面那组数据对分类器进行优化，但是系统对后面那组数据的效果很差，因此这个团队浪费了几个月的时间。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558613969782.png" alt="Alt text"></p>
+<p>因此选择的<strong>开发集</strong>和<strong>测试集</strong>是要能够反映你未来能够得到好结果的数据。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558614123598.png" alt="Alt text"></p>
+<h2 id="6-开发集和测试集设置的大小"><a href="#6-开发集和测试集设置的大小" class="headerlink" title="6. 开发集和测试集设置的大小"></a>6. 开发集和测试集设置的大小</h2><blockquote>
+<ol>
+<li>机器学习中，以前的经验法则：<br>取得的全部数据以$70 \%$和$30 \%$的比例进行<strong>训练集</strong>和<strong>测试集</strong>的划分；或者是$60 \%$、$20 \%$和$20 \%$的比例划分为<strong>训练集</strong>、<strong>开发集</strong>和<strong>测试集</strong>。在机器学习早期的时候这样是很合理的，尤其是早期数据集比较小的时候(比如100个，1000个甚至是10000个左右的时候).</li>
+<li>对于现在数据量超大的深度学习中：<br>划分比例按照$98 \%$、$1 \%$和$1 \%$将数据集划分为<strong>训练集</strong>、<strong>开发集</strong>以及<strong>测试集</strong>.<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558615230647.png" alt="Alt text"></li>
+<li>测试集的作用是帮助系统开发完毕之后用于评估系统的性能表现的，方针就是：<strong>令你的测试集足够大，以便能够以高置信度评估系统整体性能</strong>。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558615737594.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558615746966.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<h2 id="7-什么时候该改变开发集-测试集以及指标"><a href="#7-什么时候该改变开发集-测试集以及指标" class="headerlink" title="7. 什么时候该改变开发集/测试集以及指标"></a>7. 什么时候该改变开发集/测试集以及指标</h2><blockquote>
+<p>项目在进行过程中如果发现目标的位置定错了，这个情况下就需要移动你的目标了。</p>
+</blockquote>
+<p>还是以猫咪分类作为例子，在该项目中的目标是在很多照片中找到猫的照片然后发送给那些爱猫人士，这里使用的指标是分类误差。所以算法<strong>A</strong>和算法<strong>B</strong>的表现如下：<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558616499769.png" alt="Alt text"><br>似乎算法<strong>A</strong>做的更好，但是如果观察一下算法<strong>A</strong>发现它把很多色情图片误分类成了猫，因此如何部署算法<strong>A</strong>，用户将得到更多的猫的图片，因为它的误差只有$3 \%$，但是它同时会给用户推送色情图片，这是不能容忍的。相比之下算法<strong>B</strong>就好的多。</p>
+<p>这种情况下<strong>开发集</strong>和<strong>单实数指标</strong>都倾向于算法<strong>A</strong>，因为<strong>A</strong>的误差较低，这是团队自己定下的指标评估出来的。但是实际的是用户更倾向于算法<strong>B</strong>。在这种情况下，当你的评估指标无法正确衡量模型算法之间的优劣的时候，就需要改变评估指标了或者要改变<strong>开发集</strong>或<strong>测试集</strong>了。</p>
+<p>在这里你使用的分类误差指标可以写成：</p>
+<script type="math/tex; mode=display">Error = \frac{1}{m_{dev}} \sum_{i = 1}^{m_{dev}} \mathbf I[y_{pred}^{(i)}  \neq y^{(i)}]</script><p>以上评估指标的问题在于它对于色情图片和非色情图片一视同仁。其中一个修改评估指标的方法是，在上面的式子中添加权重项：</p>
+<script type="math/tex; mode=display">Error = \frac{1}{\sum_{i} \omega^{(i)}} \sum_{i = 1}^{m_{dev}} \omega^{(i)}·\mathbf I[y_{pred}^{(i)}  \neq y^{(i)}]</script><script type="math/tex; mode=display">
+\omega^{(i)} = 
+\begin{cases}
+1, &\text{if $x^{(i)}$ is non-porn} \\
+10, &\text{if $x^{(i)}$ is porn}
+\end{cases}</script><p>这样你赋予了色情图片更大的权重，让算法在误将色情图片分类成猫的时候误差项快速变大。前面的系数更改是为了归一化，以便使得误差依旧在$[0,1]$之间。至于如何加权在此处不是重点。</p>
+<p>实际上要使用这种加权，需要你自己过一遍<strong>开发集</strong>和<strong>测试集</strong>，以便自己讲色情图片标记出来，这样才能使用这个加权函数。因此一旦你定义的评估指标无法对多个模型进行正确的排名，那么就需要花时间定义一个新的评估指标了。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558618736507.png" alt="Alt text"></p>
+<p><strong>Summary：(正交化的两步)</strong></p>
+<blockquote>
+<ol>
+<li>定义好的评估指标；</li>
+<li>努力去命中定义的目标。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558618993086.png" alt="Alt text"></li>
+<li>如果你在指标上表现很好，在当前的<strong>开发集</strong>和<strong>测试集</strong>中表现很好，但是在实际的应用程序中，你真正关注的地方表现却不好的时候，那么就需要立即<strong>修改指标</strong>或者你的<strong>开发集</strong>以及<strong>测试集</strong>了。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558619230287.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<h2 id="8-为什么是人的表现"><a href="#8-为什么是人的表现" class="headerlink" title="8. 为什么是人的表现"></a>8. 为什么是人的表现</h2><blockquote>
+<p>事实证明，当你试图让机器人做人类能够做的事情的时候，比较人类和机器的各自表现，可以有助于精心设计机器学习系统的工作流程，让工作流程效率更高。</p>
+</blockquote>
+<p>下图的内容如下：<br>$x$轴是你在一个机器学习项目中所花费的时间，一开始项目的表现开始往人类水平努力的时候，进展是很快的。但是过一段时间，当这个算法的表现比人类的更好时，那么进展和精确度的提升就会变得缓慢了，也即在超越人类水平之后，它的表现可以变得更好，只是性能增速、准确率上升的速度就会变得越来越平缓，我们都希望能够达到<strong>理论最佳性能水平(theoretical optimum level of performance)</strong>。随着时间的推移，当你继续训练算法的时候，可能模型越来越大，数据越来越多，但是性能无法超过某个理论上限，这就是所谓的<strong>贝叶斯最优误差(the Bayes optimal error / Bayesian)</strong>。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558620703946.png" alt="Alt text"><br>所以<strong>贝叶斯最优误差一般被认为是理论上可以达到的最优误差</strong> ，也就是说没有任何办法设计出一个从$x$到$y$的函数，让它能够超过一定的准确率。</p>
+<p>例如，对于语音识别来说，如果$x$是音频片段，有些音频就是这么嘈杂，基本上不可能知道说的是什么，所以完美的准确率可能不是$100 \%$，或者对于图像识别来说，也行有些图片非常模糊，不管是人类还是机器，就是无法判断图像中到底有没有猫，所以完美的准确率可能不是$100 \%$。<strong>贝叶斯误差代表的就是从</strong>$x$<strong>到</strong>$y$<strong>映射的理论最优函数永远不会被超越</strong>。</p>
+<p>这里有两个可能的原因能够解释算法超过人类表现之后为何进展缓慢下来：</p>
+<blockquote>
+<ol>
+<li>人类水平在很多任务中离<strong>贝叶斯最优误差</strong>已经不远了，例如在图像识别中人类能够比较轻易的分别图片中是否有猫，或者在语音识别中人类能够分辨音频的内容。因此当你的算法超越人类以后，也许没有太多的空间继续改善了；</li>
+<li>有些工具能够在你的算法的表现比人类水平差的时候帮助你的算法提高性能，但是一旦超越人类的表现的时候，这些工具就没那么好用了，比方说：<blockquote>
+<p>2.1 对于人类相当擅长的任务，比如看图识物，听写音频以及阅读语言，只要你的算法比人类差，你就可以通过：</p>
+<ul>
+<li><strong>Get labeled data from human(让人帮你标记数据).</strong></li>
+<li><strong>Gain insight from manual error analysis: Why did a person get this right?(人工误差分析).</strong></li>
+<li><strong>Better analysis of bias/variance(更好的分析偏差和方差).</strong></li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<p>而当你的算法性能超越人类的表现的时候，这三种策略就很难利用了。以上的策略也是体现了和人类表现进行比较的好处，尤其是在人类做的很好的任务上。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558622015530.png" alt="Alt text"></p>
+</blockquote>
+<h2 id="9-可避免偏差"><a href="#9-可避免偏差" class="headerlink" title="9. 可避免偏差"></a>9. 可避免偏差</h2><blockquote>
+<p>通常我们希望自己的学习算法能够在训练集上变现良好，但是实际的有时候你并不想做的太好，你的知道人类水平的表现怎么样，可以准确告诉你算法在训练集上的表现到底应该有多好或者有多不好。</p>
+</blockquote>
+<p>还是以猫分类器作为例子，假设人类的表现近乎完美，错误率在$1 \%$左右，而你的算法在<strong>训练集</strong>上的错误率为$8 \%$，在<strong>开发集</strong>上的误差为$10 \%$，那么你应该是想在<strong>训练集</strong>上有更好的结果。所以实际上你的算法在<strong>训练集</strong>上的表现和人类水平的表现有很大差距的话，说明你的算法对训练集的拟合并不好，所以从减少<strong>偏差</strong>和<strong>方差</strong>的工具这个角度看，在这种情况下我会把重点放在减少偏差上，你需要做的比如说：训练更大的神经网络，或者跑久一点梯度下降；</p>
+<p>但是在不同的应用项目中，人类水平的误差不同，假设在另一个项目上，人类水平误差实际是$7.5 \%$，也许你的数据集的图像非常模糊，即使人类也无法分辨图像中是否有猫，而<strong>训练集</strong>和<strong>开发集</strong>的错误率还是和上面一样，这个情况下，你的系统在<strong>训练集</strong>上的表现也好可以，它只比人类稍微差一点点，此时需要做的就是减少算法的<strong>方差</strong>了，比如试试<strong>正则化</strong>或者收集更多的训练数据。</p>
+<p>在这里我们就是使用人类水平误差估计或者代替<strong>贝叶斯最优误差</strong>，因为在计算机视觉这种人类很擅长的领域中，人类水平误差与<strong>贝叶斯误差</strong>接近，仅仅比其高一点。</p>
+<p>这里把<strong>贝叶斯误差</strong>与<strong>训练集误差</strong>之间的差距称之为<strong>可避免误差(the avoidable bias)</strong>。而想要达到甚至超过<strong>贝叶斯误差</strong>除非过拟合。而<strong>训练集误差</strong>和<strong>开发集误差</strong>则是方差。因此需要衡量方差和<strong>可避免误差</strong>之间的大小以决定需要缩短哪一个误差的潜力更大。<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558625177980.png" alt="Alt text"></p>
+<h2 id="10-理解人的表现"><a href="#10-理解人的表现" class="headerlink" title="10. 理解人的表现"></a>10. 理解人的表现</h2><p>对于下图，我们可以得到<strong>贝叶斯误差</strong>的估计的下限应该是小于等于$0.5 \%$<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558625553443.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558625832727.png" alt="Alt text"><br>以前的时候我们测量的时候<strong>训练误差</strong>和$0 \%$，现在换成了一个更加符合实际，更加微妙的——<strong>人类水平近似估计的贝叶斯误差</strong>.</p>
+<h2 id="11-超过人的表现"><a href="#11-超过人的表现" class="headerlink" title="11. 超过人的表现"></a>11. 超过人的表现</h2><p><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558626293768.png" alt="Alt text"><br>上图的左边的例子还可以比较轻松的判断<strong>可避免偏差是多少</strong>? 而右边的例子的<strong>可避免偏差</strong>就不好判断了。例子中的<strong>训练误差</strong>实际的值是否意味着你的算法可能已经过拟合了$0.2 \%$或者说<strong>贝叶斯误差</strong>，其实比$0.5 \%$小呢？这个你是真的不知道的，但是右边的例子可以看出你是没有更多的信息来判断优化你的算法的时候应该更多的减少偏差还是方差，此时靠人的直觉去判断你的算法应该优化的方向是很难的，此时优化就没有了明确的选项和前进的方向了。</p>
+<p>下图中的这些个例子是一些现今机器学习的表现远超单个人类表现的例子：<br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558626761514.png" alt="Alt text"><br>而这几个例子都是从结构化的数据中学习得到的，它们并不是自然感知类型的问题(计算机视觉，自然语言处理等)，人类在这种问题中的表现会更好。</p>
+<h2 id="12-改善模型表现"><a href="#12-改善模型表现" class="headerlink" title="12. 改善模型表现"></a>12. 改善模型表现</h2><p><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558627150253.png" alt="Alt text"><br><img src= "/img/loading.gif" data-src="/2019/05/24/machine-learning-stategy/1558627365213.png" alt="Alt text"></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stoner</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2019/05/24/machine-learning-stategy/">http://yoursite.com/2019/05/24/machine-learning-stategy/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com" target="_blank">Stoner的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/">优化策略</a></div><div class="post_share"><div class="social-share" data-image="http://qe0z9wdl5.bkt.clouddn.com/20200725214526.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/05/25/machine-learning-stategy-2/"><img class="prev-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">机器学习项目优化策略(2)</div></div></a></div><div class="next-post pull-right"><a href="/2019/05/23/Sword-to-Offer/"><img class="next-cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">剑指Offer部分题解</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/05/25/machine-learning-stategy-2/" title="机器学习项目优化策略(2)"><img class="relatedPosts_cover" data-src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2019-05-25</div><div class="relatedPosts_title">机器学习项目优化策略(2)</div></div></a></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By Stoner</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://jerryc.me/" target="_blank" rel="noopener">blog</a>!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button id="readmode" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" title="缩小字体"><i class="fas fa-minus"></i></button><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script defer id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="true"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script>if (document.getElementsByClassName('mermaid').length) {
+  loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',function () {
+    mermaid.initialize({
+      theme: 'default',
+  })
+})
+}</script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script></body></html>
