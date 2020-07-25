@@ -1,0 +1,242 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>  数字视频编码技术原理 |    white.</title>
+  <!-- 标签页图标 -->
+  
+  <!-- 图标库 -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- 动画库 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+  <!-- css文件 -->
+  
+<link rel="stylesheet" href="/css/white.css">
+
+  <!-- 代码高亮 -->
+  
+  <!-- tocbot -->
+  
+    
+<link rel="stylesheet" href="/css/tocbot.css">
+
+  
+  <!-- 声明document.ready函数 -->
+  <!-- <script>
+      document.ready = function (callback) {
+        ///兼容FF,Google
+        if (document.addEventListener) {
+          document.addEventListener('DOMContentLoaded', function () {
+            document.removeEventListener('DOMContentLoaded', arguments.callee, false);
+            callback();
+          }, false)
+        }
+        //兼容IE
+        else if (document.attachEvent) {
+          document.attachEvent('onreadystatechange', function () {
+            if (document.readyState == "complete") {
+              document.detachEvent("onreadystatechange", arguments.callee);
+              callback();
+            }
+          })
+        }
+        else if (document.lastChild == document.body) {
+          callback();
+        }
+      }
+  </script> -->
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="menu-outer">
+    <div class="menu-inner">
+      <div class="menu-site-name  animate__animated  animate__fadeInUp">
+        <a href="/">
+          white.
+        </a>
+        
+      </div>
+      <div class="menu-group">
+        <ul class="menu-ul">
+        
+          <a href="/" class="nav-link">
+            <li class="menu-li  animate__animated  animate__fadeInUp">
+              HOME
+            </li>
+          </a>
+        
+          <a href="/archives" class="nav-link">
+            <li class="menu-li  animate__animated  animate__fadeInUp">
+              BLOG
+            </li>
+          </a>
+        
+        
+        </ul>
+
+      </div>
+
+    </div>
+</div>
+
+<div class="body-outer">
+  <div class="body-inner">
+    
+<article class="post-inner">
+  <div class="post-content-outer">
+    <div class="post-content-inner ">
+      <div class="post-intro-no-cover">
+        <div class="post-title animate__animated  animate__fadeInUp">数字视频编码技术原理</div>
+        <div class="meta-intro animate__animated  animate__fadeInUp"><span class="intro-span">2020年7月25日 by white</span></div>
+        
+      </div>
+      <div class="post-content-main animate__animated  animate__fadeInUp">
+        <!-- 目录 -->
+        
+          <ol class="toc-top"><li class="toc-top-item toc-top-level-2"><a class="toc-top-link" href="#1-第1章-概论"><span class="toc-top-text">1. 第1章 概论</span></a></li><li class="toc-top-item toc-top-level-2"><a class="toc-top-link" href="#2-第2章-视频编码基础"><span class="toc-top-text">2. 第2章 视频编码基础</span></a></li></ol>
+        
+        <p><strong>内容说明</strong>：关于《数字视频编码技术》相关书籍的知识点记录.<br><a id="more"></a></p>
+<h2 id="1-第1章-概论"><a href="#1-第1章-概论" class="headerlink" title="1. 第1章 概论"></a>1. 第1章 概论</h2><h3 id="1-0-前言"><a href="#1-0-前言" class="headerlink" title="1.0 前言"></a>1.0 前言</h3><blockquote>
+<ol>
+<li>一帧图像：视频是按一定时间间隔获取的图像序列，序列中的一幅图像也被成为<strong>一帧图像</strong>；</li>
+<li>数字化：为了处理、传输和存储方便，需要将图像在空间上的连续模拟量进行采样和量化，将其变为数字量的过程；</li>
+<li>模拟视频信号在数字化过程中的过采样是导致数字视频中存在大量的数据冗余的根本原因。</li>
+<li>在实际使用中，由于很难测定图像信号的频率，人们通常简单地将图像按照一个约定俗成的密度进行采样，例如每行$1920$个采样点，每幅图像$1080$行等。每个采样点得到的数据成为<strong>像素</strong>，一幅图像采样的行数和列数称为图像的<strong>分辨率</strong>。</li>
+</ol>
+</blockquote>
+<h3 id="1-1-视觉感知"><a href="#1-1-视觉感知" class="headerlink" title="1.1 视觉感知"></a>1.1 视觉感知</h3><blockquote>
+<ol>
+<li>光源的能量使用<strong>光通量</strong>度量，<strong>光通量</strong>是<strong>每单位时间到达、离开或通过曲面的光能数量。</strong>光通量的单位是<strong>流明</strong>，记作：$lm$，指的是每瓦激发光源的辐射光能；</li>
+<li>人的视觉系统<strong>human visual system(HVS)</strong>对光的感知具有融合处理能力，可以将三种基色视锥细胞的输出融合为<strong>亮度(Y)</strong>和<strong>色度/色饱和度(U、V)</strong>；</li>
+</ol>
+</blockquote>
+<h3 id="1-2-数字视频"><a href="#1-2-数字视频" class="headerlink" title="1.2 数字视频"></a>1.2 数字视频</h3><blockquote>
+<ol>
+<li>一个数字视频系统包含采集（照相机、摄像机等）、处理（压缩、传输及解码等）和显示等几个重要模块。</li>
+<li><strong>图像传感器（sensor）</strong>：<strong>电耦合器（CCD）</strong>和<strong>互补性氧化金属半导体（CMOS）</strong> ，其中<strong>CCD</strong>由高感光度的半导体材料构成，可以将光信号转化为电信号，所有感光单元产生的信号组合起来构成一副完整的数字图像，<strong>CCD</strong>的输出是模拟信号，连续的模拟信号通过模数转换器（A/D）转换成数字信号，<strong>CCD</strong>在扫描所有数据后将信号放大，而<strong>CMOS</strong>每扫描一个像素即刻对信号进行放大，因此用很少的能量消耗就可以进行快速扫描，<strong>CCD</strong>成像质量优于<strong>CMOS</strong>，但是成本更高；</li>
+<li>二维视频图像的视觉质量受到单位面积采样点多少(解析度)的影响，对同样面积的视频场景，如果用高解析度的图像来表示会有更清晰的效果，相反低解析度的图像会导致模糊的效果；</li>
+<li>通过在不同时间点上采样二维的视频场景图像，可以得到视频的多个时间采样点，数字视频序列就是由一段时间间隔内的空间采样点组成的；</li>
+</ol>
+</blockquote>
+<h4 id="1-2-2-色彩空间"><a href="#1-2-2-色彩空间" class="headerlink" title="1.2.2 色彩空间"></a>1.2.2 色彩空间</h4><blockquote>
+<ol>
+<li>常用的色彩空间表示方法由<strong>RGB</strong>和<strong>YUV</strong>等。用<strong>RGB</strong>色彩空间表示视频图像时，一个像素需要用三个样值(即<strong>R</strong>、<strong>G</strong>、<strong>B</strong>三个色度值)表示，若每种色度成分用<strong>8 bit</strong>表示，那么彩色图像的一个像素需要<strong>24 bit</strong>表示；</li>
+<li>人类的视觉系统对亮度的感知比对色度的感知更加敏感，因此将色彩空间分解为亮度(<strong>Y</strong>)和色度(<strong>U、V</strong>)两个基本成分，根据对<strong>Y、U、V</strong>三个分量的采样比率不同，数字视频图像可分为$4:2:0、4:2:2、4:4:4$；<br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595405121362.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595405109994.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595405135108.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595405149289.png" alt="Alt text"></li>
+<li><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595405297957.png" alt="Alt text"></li>
+</ol>
+</blockquote>
+<h4 id="1-2-3-视频格式"><a href="#1-2-3-视频格式" class="headerlink" title="1.2.3 视频格式"></a>1.2.3 视频格式</h4><blockquote>
+<ol>
+<li>一帧图像的像素点按行排列可以分为偶数行和奇数行，如果偶数行和奇数行的像素是在相同时间点采样得到的，则称该帧为<strong>逐行帧</strong>；如果偶数行和奇数行的像素在不同的时间点采样得到的，则该帧成为<strong>隔行帧</strong>，<strong>隔行帧</strong>中所有偶数行构成该图像的订场，所有奇数行构成该图像的低场；</li>
+<li>视频在获取或者显示的时候，每秒钟按逐行扫描处理的图像数成为帧率，每秒钟按隔行扫描处理的图像数称为场率，例如每秒25帧或者50场等；</li>
+</ol>
+</blockquote>
+<h3 id="1-3-视频数据冗余"><a href="#1-3-视频数据冗余" class="headerlink" title="1.3 视频数据冗余"></a>1.3 视频数据冗余</h3><blockquote>
+<ol>
+<li>从数字信号的统计特征方面，一般将这些数据冗余分成<strong>空间冗余、时间冗余和信息熵冗余</strong>三大类；<br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595406584850.png" alt="Alt text"></li>
+<li></li>
+</ol>
+</blockquote>
+<h2 id="2-第2章-视频编码基础"><a href="#2-第2章-视频编码基础" class="headerlink" title="2. 第2章 视频编码基础"></a>2. 第2章 视频编码基础</h2><h3 id="2-2-香农编码定理"><a href="#2-2-香农编码定理" class="headerlink" title="2.2 香农编码定理"></a>2.2 香农编码定理</h3><ol>
+<li><strong>离散无记忆(memoryless)信源：</strong>离散信源的一种类型. 若表示信源输出消息的随机变量序列是一个<strong>相互独立同分布的随机变量序列</strong>，在此情况下，信源先后发出的一个个符号是统计独立同分布的，即对任意正整数$N$，其$N$维联合概率分布满足：<script type="math/tex; mode=display">P(X_1, X2, ..., X_N) = \prod_{i=i}^N P(X_i)</script>换句话说，随机变量序列中的任意$N$维随机变量的联合概率分布可用随机变量中单个随机变量的概率分布的乘积来表示。这种信源称为<strong>离散无记忆信源</strong>。离散无记忆信源可用它输出的一个随机变量$X$来表示。离散无记忆信源是最简单的离散信源，可以用完备的离散型概率空间来描述，其主要特点是离散和无记忆。离散指的是信源可能输出的消息的种类是有限的或者是可数的。消息的样本空间R是一个离散集合。由于信源的每一次输出都是按照消息发生的概率输出R中的一种消息，因此信源输出的消息可以用离散随机变量X表示。无记忆是指不同的信源输出消息之间相互独立。（<a href="https://baike.baidu.com/item/%E7%A6%BB%E6%95%A3%E6%97%A0%E8%AE%B0%E5%BF%86%E4%BF%A1%E6%BA%90/19141006?fr=aladdin" target="_blank" rel="noopener">百度百科——离散无记忆信源</a>）</li>
+</ol>
+<hr>
+<ol>
+<li>目前主流的视频编码器采用的技术主要有<strong>预测、变换、量化、熵编码和环路滤波</strong>，这些技术在编码器中的基本次序关系如下图。主流的编码方法都是将图像划分成块进行编码，其中第二代标准都是划分成$16 \times 16$的宏块，第三代标准引入了更大块的划分，比如最大可到$64 \times 64$块的编码单元，以编码单元为单位进行编码。将每帧图像进行划分后，按照从上之下，从左至右的顺序对每个划分进行处理。<br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595473825907.png" alt="Alt text"></li>
+</ol>
+<hr>
+<ol>
+<li><a href="https://zhuanlan.zhihu.com/p/75804693" target="_blank" rel="noopener">知乎专栏—码率是什么？比特率是干嘛的？帧速率是啥？分辨率又是什么？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27037506" target="_blank" rel="noopener">知乎专栏—视频码率；</a></li>
+<li><a href="https://www.zhihu.com/question/27460676/answer/36736875" target="_blank" rel="noopener">知乎—视频音频比特率（码率）与采样率有什么联系？</a></li>
+<li><a href="http://tv.zol.com.cn/621/6216268.html" target="_blank" rel="noopener">网站视频不清晰?浅谈不可忽视的比特成本</a></li>
+<li><a href="https://blog.csdn.net/tkp2014/article/details/51111303?locationNum=1&amp;fps=1" target="_blank" rel="noopener">什么是码率？</a></li>
+<li><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595475863722.png" alt="Alt text"></li>
+<li><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595475895327.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595475907316.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595475942755.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595475950952.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595475987968.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595476029260.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595476020931.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595476043686.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595476080072.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595476091251.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595476108553.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595476117468.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595478722039.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595478748680.png" alt="Alt text"><br><img src="/2020/07/25/%E6%95%B0%E5%AD%97%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/1595478780251.png" alt="Alt text"><blockquote>
+<ol>
+<li><a href="https://www.jianshu.com/p/028196b8ca14" target="_blank" rel="noopener">码率，分辨率，帧率 …</a></li>
+<li><a href="https://www.cnblogs.com/yongdaimi/p/10651537.html" target="_blank" rel="noopener">音视频编解码: 比特率 码率</a></li>
+<li><a href="https://www.cnblogs.com/linuxAndMcu/p/12113242.html" target="_blank" rel="noopener">音视频基础知识—-音频编码格式（转）</a></li>
+<li><a href="https://juejin.im/post/5cf07dfdf265da1b8466ca8c" target="_blank" rel="noopener">视频的基本参数及H264编解码相关概念</a></li>
+<li><a href="https://www.codercto.com/a/87804.html" target="_blank" rel="noopener">ios平台实现视频H264硬编码及软编码(附完整demo)</a></li>
+<li><a href="https://blog.csdn.net/weixin_34004750/article/details/91469605" target="_blank" rel="noopener">ios视频实现H264硬编码和软编码编译ffmpeg库及环境搭建(附完整demo)</a></li>
+<li><a href="https://wenku.baidu.com/view/583082be590216fc700abb68a98271fe900eaf67.html" target="_blank" rel="noopener">离散无记忆的扩展信源.PPT</a></li>
+<li><a href="https://wenku.baidu.com/view/4a2b33666ad97f192279168884868762caaebbf1.html" target="_blank" rel="noopener">二次扩展信源的熵2.PPT</a></li>
+<li><a href="https://www.cnblogs.com/tid-think/p/10616789.html" target="_blank" rel="noopener">图像原始格式(YUV444 YUV422 YUV420)一探究竟</a></li>
+<li><a href="https://blog.csdn.net/xjhhjx/article/details/80291465" target="_blank" rel="noopener">YUV图解 （YUV444, YUV422, YUV420, YV12, NV12, NV21）</a></li>
+<li><a href="https://www.cnblogs.com/ziyi--caolu/p/8034367.html" target="_blank" rel="noopener">直播一：H.264编码基础知识详解</a></li>
+<li><a href="https://www.cnblogs.com/imstudy/p/11887915.html" target="_blank" rel="noopener">零基础，史上最通俗视频编码技术入门（重要）</a></li>
+<li><a href="http://www.52im.net/thread-228-1-1.html" target="_blank" rel="noopener">即时通讯音视频开发（一）：视频编解码之理论概述</a></li>
+</ol>
+</blockquote>
+</li>
+</ol>
+
+        <!-- 分类文章 -->
+        
+        <!-- 评论 -->
+        
+         
+        
+      </div>
+   </div>
+  </div>
+</article>
+  </div>
+</div>
+
+  <div class="footer-outer animate__animated  animate__fadeInUp">
+    <div class="footer-inner">
+    <div class="footer-text">
+    <p>Power by <a href="http://hexo.io/" target="_blank" rel="noopener">Hexo</a> Theme by <a href="https://github.com/FuShaoLei/hexo-theme-white" target="_blank" rel="noopener">White</a></p>
+
+    </div>
+    <div class="footer-contact">
+    <ul class="footer-ul">
+        
+        <li class="footer-li">
+            <a href="https://github.com/FuShaoLei/hexo-theme-white" target="_blank">
+                <i class="ri-github-line"></i>
+            </a>
+        </li>
+        
+    </ul>
+    </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+<script src="/js/white.js"></script>
+<script src="/js/search.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
