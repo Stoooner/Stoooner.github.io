@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>评分卡模型中的IV和WOE详解 | Stoner的博客</title><meta name="description" content="内容说明：评分卡中各个特征的筛选和模型性能评估的指标. 1. IV的用途IV的全称是Information Value，中文意思是信息价值，或者信息量。我们在用逻辑回归、决策树等模型方法构建分类模型时，经常需要对自变量(也就是我们说的特征，Features)进行筛选。比如我们有$200$个候选自变量，通常情况下，不会直接把$200$个变量直接放到模型中去进行拟合训练，而是会用一些方法，从这$200"><meta name="keywords" content="评分卡,评估指标"><meta name="author" content="Stoner"><meta name="copyright" content="Stoner"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/2020/07/27/IV-WOE/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="评分卡模型中的IV和WOE详解"><meta property="og:url" content="http://yoursite.com/2020/07/27/IV-WOE/"><meta property="og:site_name" content="Stoner的博客"><meta property="og:description" content="内容说明：评分卡中各个特征的筛选和模型性能评估的指标. 1. IV的用途IV的全称是Information Value，中文意思是信息价值，或者信息量。我们在用逻辑回归、决策树等模型方法构建分类模型时，经常需要对自变量(也就是我们说的特征，Features)进行筛选。比如我们有$200$个候选自变量，通常情况下，不会直接把$200$个变量直接放到模型中去进行拟合训练，而是会用一些方法，从这$200"><meta property="og:image" content="http://qe0z9wdl5.bkt.clouddn.com/20200729203756.png"><meta property="article:published_time" content="2020-07-27T14:49:09.000Z"><meta property="article:modified_time" content="2020-07-29T13:05:38.079Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="prev" title="模组进行视频录制及HEVC视频编解码" href="http://yoursite.com/2020/07/29/%E6%A8%A1%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%A7%86%E9%A2%91%E5%BD%95%E5%88%B6%E5%8F%8AHEVC%E8%A7%86%E9%A2%91%E7%BC%96%E8%A7%A3%E7%A0%81/"><link rel="next" title="LeetCode——674/830题解" href="http://yoursite.com/2020/07/26/leetcode-674-830/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: false,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Stoner的博客" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="http://qe0z9wdl5.bkt.clouddn.com/20200726202347.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">51</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">66</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">18</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-IV的用途"><span class="toc-number">1.</span> <span class="toc-text">1. IV的用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-对IV的直观理解"><span class="toc-number">2.</span> <span class="toc-text">2. 对IV的直观理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-IV的计算"><span class="toc-number">3.</span> <span class="toc-text">3. IV的计算</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-WOE"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 WOE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-IV的计算公式"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 IV的计算公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-用实例介绍IV的计算和使用"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 用实例介绍IV的计算和使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-1-实例"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.3.1 实例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-2-计算WOE和IV"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.3.2 计算WOE和IV</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-3-IV值的比较和变量预测能力的排序"><span class="toc-number">3.3.3.</span> <span class="toc-text">3.3.3 IV值的比较和变量预测能力的排序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-关于IV和WOE的进一步思考"><span class="toc-number">4.</span> <span class="toc-text">4. 关于IV和WOE的进一步思考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-为什么用IV而不是直接用WOE"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 为什么用IV而不是直接用WOE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-IV的极端情况以及处理方式"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 IV的极端情况以及处理方式</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(http://qe0z9wdl5.bkt.clouddn.com/20200729203756.png)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Stoner的博客</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">评分卡模型中的IV和WOE详解</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2020-07-27 22:49:09"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2020-07-27</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2020-07-29 21:05:38"><i class="fas fa-history fa-fw"></i> 更新于 2020-07-29</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p><strong>内容说明</strong>：评分卡中各个特征的筛选和模型性能评估的指标.<br><a id="more"></a></p>
+<h2 id="1-IV的用途"><a href="#1-IV的用途" class="headerlink" title="1. IV的用途"></a>1. IV的用途</h2><p><strong>IV</strong>的全称是<strong>Information Value</strong>，中文意思是信息价值，或者信息量。我们在用逻辑回归、决策树等模型方法构建分类模型时，经常需要对自变量(也就是我们说的特征，<strong>Features</strong>)进行筛选。比如我们有$200$个候选自变量，通常情况下，不会直接把$200$个变量直接放到模型中去进行拟合训练，而是会用一些方法，从这$200$个自变量中挑选一些出来，放进模型，形成入模变量列表。那么我们怎么去挑选入模变量呢？</p>
+<p>挑选入模变量过程是个比较复杂的过程，需要考虑的因素很多，比如：</p>
+<blockquote>
+<ul>
+<li><strong>变量的预测能力</strong>；</li>
+<li><strong>变量之间的相关性</strong>；</li>
+<li><strong>变量的简单性（容易生成和使用）</strong>；</li>
+<li><strong>变量的强壮性（不容易被绕过）</strong>；</li>
+<li><strong>变量在业务上的可解释性（被挑战时可以解释的通）等等</strong>。</li>
+</ul>
+</blockquote>
+<p>但是，其中最主要和最直接的衡量标准是变量的预测能力。</p>
+<p><strong>“变量的预测能力”</strong>这个说法很笼统，很主观，非量化，在筛选变量的时候我们总不能说：“我觉得这个变量预测能力很强，所以他要进入模型”吧？我们需要一些具体的量化指标来衡量每自变量的预测能力，并根据这些量化指标的大小，来确定哪些变量进入模型。<strong>IV</strong>就是这样一种指标，他可以用来衡量自变量的预测能力。类似的指标还有<strong>信息增益、基尼系数</strong>等等。</p>
+<h2 id="2-对IV的直观理解"><a href="#2-对IV的直观理解" class="headerlink" title="2. 对IV的直观理解"></a>2. 对IV的直观理解</h2><p>从直观逻辑上大体可以这样理解<strong>“用IV去衡量变量预测能力”</strong>这件事情：我们假设在一个分类问题中，<strong>目标变量(也就是我们所说的标签)</strong>类别两类：$Y_1，Y_2$。</p>
+<p>对于一个待预测的个体$A$(也就是一个样本)，要判断$A$属于类别$Y_1$还是$Y_2$，我们是需要一定的信息的，假设这个信息总量是$I$，而这些所需要的信息，就蕴含在所有的自变量$C_1，C_2，C_3，……，C_n$中。</p>
+<p>那么，对于其中的一个变量$C_i$来说，其蕴含的信息越多，那么它对于判断$A$属于$Y_1$还是$Y_2$的贡献就越大，$C_i$的信息价值就越大，$C_i$的$IV$就越大，它就越应该进入到入模变量列表中。</p>
+<h2 id="3-IV的计算"><a href="#3-IV的计算" class="headerlink" title="3. IV的计算"></a>3. IV的计算</h2><p>前面我们从感性角度和逻辑层面对<strong>IV</strong>进行了解释和描述，那么回到数学层面，对于一个待评估变量，他的<strong>IV</strong>值究竟如何计算呢？为了介绍<strong>IV</strong>的计算方法，我们首先需要认识和理解另一个概念——<strong>WOE</strong>，因为<strong>IV</strong>的计算是以<strong>WOE</strong>为基础的。</p>
+<h3 id="3-1-WOE"><a href="#3-1-WOE" class="headerlink" title="3.1 WOE"></a>3.1 WOE</h3><p><strong>WOE</strong>的全称是<strong>“Weight of Evidence”</strong>，即证据权重。<strong>WOE</strong>是对原始自变量的一种编码形式。</p>
+<p>要对一个变量进行<strong>WOE</strong>编码，需要首先把这个变量进行分组处理（也叫离散化、分箱等等，说的都是一个意思）。分组后，对于第<strong>i</strong>组，<strong>WOE</strong>的计算公式如下：</p>
+<script type="math/tex; mode=display">WOE_i = \ln \frac{P_{y_i}}{P_{n_i}} = \ln \frac{\#y_i/\#y_T}{\#n_i/\#n_T}</script><p>其中:</p>
+<blockquote>
+<ul>
+<li>$P_{y_i}$是这个组中响应客户(风险模型中，对应的是违约客户，总之，指的是模型中预测变量或者说标签取值为<strong>“是”</strong>或者取值为$1$的个体)占所有样本中所有响应客户比例;</li>
+<li>$P_{n_i}$是这个组中未响应客户占样本中所有未响应客户的比例;</li>
+<li>$\#y_i$是这个组中响应客户的数量，$\#n_i$是这个组中未响应客户的数量，$\#y_T$是样本中所有响应客户的数量，$\#n_T$是样本中所有未响应客户的数量。</li>
+</ul>
+</blockquote>
+<p>从这个公式中我们可以体会到，<strong>WOE</strong>表示的实际上是<strong>“当前分组中响应客户占所有响应客户的比例”</strong>和<strong>“当前分组中没有响应的客户占所有没有响应的客户的比例”</strong>的差异。对这个公式做一个简单变换，可以得到：</p>
+<script type="math/tex; mode=display">WOE_i = \ln \frac{P_{y_i}}{P_{n_i}} = \ln \frac{\#y_i/\#y_T}{\#n_i/\#n_T} = \ln \frac{\#y_i/\#n_i}{\#y_T/\#n_T}</script><p>变换以后我们可以看出，<strong>WOE</strong>也可以这么理解，<strong><em>他表示的是当前这个组中响应的客户和未响应客户的比值，和所有样本中这个比值的差异。</em></strong>这个差异是用这两个比值的比值，再取对数来表示的。</p>
+<p><strong>WOE</strong>越大，这种差异越大，这个分组里的样本响应的可能性就越大，<strong>WOE</strong>越小，差异越小，这个分组里的样本响应的可能性就越小(其实，<strong>WOE</strong>的公式就是一个<strong>Odds</strong>的公式)。关于<strong>WOE</strong>编码所表示的意义，大家可以自己再好好体会一下。</p>
+<h3 id="3-2-IV的计算公式"><a href="#3-2-IV的计算公式" class="headerlink" title="3.2 IV的计算公式"></a>3.2 IV的计算公式</h3><p>有了前面的介绍，我们可以正式给出<strong>IV</strong>的计算公式。对于一个分组后的变量，第<strong>i</strong>组的<strong>WOE</strong>前面已经介绍过，是这样计算的：</p>
+<script type="math/tex; mode=display">WOE_i = \ln \frac{P_{y_i}}{P_{n_i}} = \ln \frac{\#y_i/\#y_T}{\#n_i/\#n_T} = \ln \frac{\#y_i/\#n_i}{\#y_T/\#n_T}</script><p>同样，对于分组<strong>i</strong>，也会有一个对应的<strong>IV</strong>值，计算公式如下：</p>
+<script type="math/tex; mode=display">IV_i = (P_{y_i} - P_{n_i}) * WOE_i = (P_{y_i} - P_{n_i}) * \ln\frac{P_{y_i}}{P_{n_i}} \\ 
+= (\#y_i/\#y_T - \#n_i/\#n_T) * \ln\frac{\#y_i/\#y_T}{\#n_i/\#n_T}</script><p>有了一个变量各分组的<strong>IV</strong>值，我们就可以计算整个变量的<strong>IV</strong>值，方法很简单，就是把各分组的<strong>IV</strong>相加：</p>
+<script type="math/tex; mode=display">IV = \sum_i^{n}IV_i</script><p>其中$n$为变量分组个数(也就是这个特征被离散化之后的份数)。</p>
+<h3 id="3-3-用实例介绍IV的计算和使用"><a href="#3-3-用实例介绍IV的计算和使用" class="headerlink" title="3.3 用实例介绍IV的计算和使用"></a>3.3 用实例介绍IV的计算和使用</h3><p>下面我们通过一个实例来讲解一下IV的使用方式。</p>
+<h4 id="3-3-1-实例"><a href="#3-3-1-实例" class="headerlink" title="3.3.1 实例"></a>3.3.1 实例</h4><p>假设我们需要构建一个预测模型，这个模型是为了预测公司的客户集合中的每个客户对于我们的某项营销活动是否能够响应，或者说我们要预测的是客户对我们的这项营销活动响应的可能性有多大。假设我们已经从公司客户列表中随机抽取了<strong>100000</strong>个客户进行了营销活动测试，收集了这些客户的响应结果，作为我们的建模数据集，其中响应的客户有<strong>10000</strong>个。另外假设我们也已经提取到了这些客户的一些变量，作为我们模型的候选变量集，这些变量包括以下这些(实际情况中，我们拥有的变量可能比这些多得多，这里列出的变量(特征)仅是为了说明我们的问题)：</p>
+<blockquote>
+<ul>
+<li><strong>最近一个月是否有购买</strong>；</li>
+<li><strong>最近一次购买金额</strong>；</li>
+<li><strong>最近一笔购买的商品类别</strong>；</li>
+<li><strong>是否是公司VIP客户</strong>；</li>
+</ul>
+</blockquote>
+<p>假设，我们已经对这些变量进行了离散化，统计的结果如下面几张表所示。</p>
+<ul>
+<li><strong>最近一个月是否有过购买：</strong><br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583806730177.png" alt="图1. 最近一个月的购买情况"></li>
+<li><strong>最近一次购买金额：</strong><br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583806768409.png" alt="图2. 最近一次购买金额情况"></li>
+<li><strong>最近一笔购买的商品类别：</strong><br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583806789695.png" alt="图3. 最近一笔购买的商品类别情况"></li>
+<li><strong>是否是公司VIP客户：</strong><br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583806825151.png" alt="图4. 是否是公司的VIP客户"></li>
+</ul>
+<h4 id="3-3-2-计算WOE和IV"><a href="#3-3-2-计算WOE和IV" class="headerlink" title="3.3.2 计算WOE和IV"></a>3.3.2 计算WOE和IV</h4><p>我们以其中的一个变量<strong>“最近一次购买金额”</strong>变量为例：<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583806875756.png" alt><br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583806886656.png" alt><br>我们把这个变量离散化为了$4$个分段：$&lt;100元，[100,200)，[200,500)，\geqslant500$元。首先，根据<strong>WOE</strong>计算公式，这四个分段的<strong>WOE</strong>分别为：<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583807164160.png" alt><br>插播一段，从上面的计算结果中我们可以看一下<strong>WOE</strong>的基本特点：</p>
+<blockquote>
+<ul>
+<li>当前分组中，响应的比例越大，<strong>WOE</strong>值越大；</li>
+<li>当前分组<strong>WOE</strong>的正负，由当前分组响应和未响应的比例，与样本整体响应和未响应的比例的大小关系决定，当前分组的比例小于样本整体比例时，<strong>WOE</strong>为负<strong>(对数函数的性质决定的)</strong>；相应的，当前分组的比例大于整体比例时，<strong>WOE</strong>为正；当前分组的比例和整体比例相等时，<strong>WOE</strong>为$0$;</li>
+<li><strong>WOE</strong>的取值范围是全体实数。</li>
+</ul>
+</blockquote>
+<p>我们进一步理解一下<strong>WOE</strong>，会发现，<strong>WOE</strong>其实描述了这个离散化的变量(特征)在当前的离散化分组下，对判断个体是否会响应（或者说属于哪个类）所起到影响方向和大小，当<strong>WOE</strong>为正时，变量当前取值对判断个体是否会响应起到的正向的影响，当<strong>WOE</strong>为负时，起到了负向影响。而<strong>WOE</strong>值的大小，则是这个影响的大小的体现。</p>
+<p>好，回到正题，计算完<strong>WOE</strong>，我们分别计算四个分组的<strong>IV</strong>值：<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583808418826.png" alt><br>再插播一段，从上面IV的计算结果我们可以看出<strong>IV</strong>的以下特点：</p>
+<blockquote>
+<ul>
+<li>对于变量的一个分组，这个分组的响应和未响应的比例与样本整体响应和未响应的比例相差越大，$IV$值越大，否则，$IV$值越小；</li>
+<li>极端情况下，当前分组的响应和未响应的比例和样本整体的响应和未响应的比例相等时，$IV$值为$0$；</li>
+<li>$IV$值的取值范围是$[0,+\infty)$，也就是说前面的权重$(P_{y_i} - P_{n_i})$的正负与后面的$WOE_i$的正负性是一致的，且当当前分组中只包含响应客户或者未响应客户时，$IV = +\infty$。</li>
+</ul>
+</blockquote>
+<p>再次回到正题。最后，我们计算变量总<strong>IV</strong>值：<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583809291499.png" alt></p>
+<h4 id="3-3-3-IV值的比较和变量预测能力的排序"><a href="#3-3-3-IV值的比较和变量预测能力的排序" class="headerlink" title="3.3.3 IV值的比较和变量预测能力的排序"></a>3.3.3 IV值的比较和变量预测能力的排序</h4><p>我们已经计算了四个变量中其中一个的<strong>WOE</strong>和<strong>IV</strong>值。另外三个的计算过程我们不再详细的说明，直接给出<strong>IV</strong>结果:</p>
+<blockquote>
+<ul>
+<li>最近一个月是否有过购买：$IV = 0.250224725$；</li>
+<li>最近一笔购买的商品类别：$IV = 0.615275563$；</li>
+<li>是否是公司<strong>VIP</strong>客户：$IV = 1.56550367$。</li>
+</ul>
+</blockquote>
+<p>前面我们已经计算过，最近一次购买金额的$IV$为$0.49270645$</p>
+<p>这四个变量$IV$排序结果是这样的：</p>
+<script type="math/tex; mode=display">是否是公司VIP客户 > 最近一笔购买的商品类别 > \\
+ 最近一次购买金额 > 最近一个月是否有过购买</script><p>我们发现<strong>“是否是公司VIP客户”</strong>这个特征是预测能力最高的变量，<strong>“最近一个月是否有过购买”</strong>这个特征是预测能力最低的变量。如果我们需要在这四个变量中去挑选变量，就可以根据<strong>IV</strong>从高到低去挑选了。在应用实践中，<strong>IV</strong>信息量大小与指标判别力有一个经验的规则：<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583809611915.png" alt></p>
+<h2 id="4-关于IV和WOE的进一步思考"><a href="#4-关于IV和WOE的进一步思考" class="headerlink" title="4. 关于IV和WOE的进一步思考"></a>4. 关于IV和WOE的进一步思考</h2><h3 id="4-1-为什么用IV而不是直接用WOE"><a href="#4-1-为什么用IV而不是直接用WOE" class="headerlink" title="4.1 为什么用IV而不是直接用WOE"></a>4.1 为什么用IV而不是直接用WOE</h3><p>从上面的内容来看，变量各分组的<strong>WOE</strong>和<strong>IV</strong>都隐含着这个分组对目标变量的预测能力这样的意义。那我们为什么不直接用<strong>WOE</strong>相加或者绝对值相加作为衡量一个变量整体预测能力的指标呢？</p>
+<p>并且，从计算公式来看，对于变量的一个分组，<strong>IV</strong>是<strong>WOE</strong>乘以这个分组响应占比和未响应占比的差。而一个变量的IV等于各分组<strong>IV</strong>的和。如果愿意，我们同样也能用<strong>WOE</strong>构造出一个这样的一个和出来，我们只需要把变量各个分组的<strong>WOE</strong>和取绝对值再相加，即（取绝对值是因为<strong>WOE</strong>可正可负，如果不取绝对值，则会把变量的区分度通过正负抵消的方式抵消掉）：</p>
+<script type="math/tex; mode=display">WOE = \sum_i^n |WOE_i|, 其中，n为变量分组个数</script><p>那么我们为什么不直接用这个<strong>WOE</strong>绝对值的加和来衡量一个变量整体预测能力的好坏，而是要用<strong>WOE</strong>处理后的<strong>IV</strong>呢。</p>
+<p>我们这里给出两个原因。<strong>IV</strong>和<strong>WOE</strong>的差别在于<strong>IV</strong>在<strong>WOE</strong>基础上乘以的那个权重系数$(P_{y_i} - P_{n_i})$，我们暂且用$P_{yn}$来代表这个值，也即$P_{yn} = (P_{y_i} - P_{n_i})$。</p>
+<blockquote>
+<ul>
+<li>第一个原因，当我们衡量一个变量的预测能力时，我们所使用的指标值不应该是负数，否则，说一个变量的预测能力的指标是$-2.3$，听起来很别扭。从这个角度讲，乘以$P_{yn}$这个系数，保证了变量每个分组的结果都是非负数，你可以验证一下，当一个分组的<strong>WOE</strong>是正数时，$P_{yn}$也是正数，当一个分组的<strong>WOE</strong>是负数时，$P_{yn}$也是负数，而当一个分组的$WOE=0$时，$P_{yn}$也是$0$。当然，上面的原因不是最主要的，因为其实我们上面提到的$WOE = \sum_i^n |WOE_i|$这个指标也可以完全避免负数的出现；</li>
+<li>更主要的原因，也就是第二个原因是，乘以$P_{yn}$后，体现出了变量当前分组中个体的数量占整体个体数量的比例，对变量预测能力的影响。</li>
+</ul>
+</blockquote>
+<p>怎么理解第二个原因呢？我们还是举个例子。假设我们上面所说的营销响应模型中，还有一个变量$A$，其取值只有两个：$0,1$，数据如下：<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583811147102.png" alt><br>我们从上表可以看出，当变量$A$取值$1$时，其响应比例达到了$90\%$，非常的高，但是我们能否说变量$A$的预测能力非常强呢？不能。为什么呢？<strong>原因就在于，$A$取$1$时，响应比例虽然很高，但这个分组的客户数太少了，占的比例太低了。</strong>虽然，如果一个客户在$A$这个变量上取$1$，那他有$90\%$的响应可能性，但是一个客户变量$A$取$1$的可能性本身就非常的低。所以，对于样本整体来说，变量的预测能力并没有那么强。我们分别看一下变量各分组和整体的$WOE，IV$。<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583811340703.png" alt><br>从这个表我们可以看到，变量取$1$时，响应比达到$90\%$，对应的<strong>WOE</strong>很高，但对应的<strong>IV</strong>却很低，原因就在于<strong>IV</strong>在<strong>WOE</strong>的前面乘以了一个系数，而这个系数很好的考虑了这个分组中样本占整体样本的比例，比例越低，这个分组对变量整体预测能力的贡献越低。相反，如果直接用<strong>WOE</strong>的绝对值加和，会得到一个很高的指标，这是不合理的。</p>
+<h3 id="4-2-IV的极端情况以及处理方式"><a href="#4-2-IV的极端情况以及处理方式" class="headerlink" title="4.2 IV的极端情况以及处理方式"></a>4.2 IV的极端情况以及处理方式</h3><p><strong>IV</strong>依赖<strong>WOE</strong>，并且<strong>IV</strong>是一个很好的衡量自变量对目标变量影响程度的指标。但是，使用过程中应该注意一个问题：变量的任何分组中，不应该出现响应数$=0$或非响应数$=0$的情况。</p>
+<p>原因很简单，当变量一个分组中，响应数$=0$时，<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583811451181.png" alt><br>此时对应的$IV_i$为$-\infty$。<br>而当变量一个分组中，没有响应的数量$= 0$时，<br><img src= "/img/loading.gif" data-src="http://qe0z9wdl5.bkt.clouddn.com/1583811514031.png" alt><br>此时对应的$IV_i$为$+\infty$。</p>
+<p>$IV_i$无论等于负无穷还是正无穷，都是没有意义的。<br>由上述问题我们可以看到，使用<strong>IV</strong>其实有一个缺点，就是不能自动处理变量的分组中出现响应比例为<strong>0</strong>或$100\%$的情况。那么，遇到响应比例为$0$或者$100\%$的情况，我们应该怎么做呢？建议如下：</p>
+<blockquote>
+<ul>
+<li>如果可能，直接把这个分组做成一个规则，作为模型的前置条件或补充条件；</li>
+<li>重新对变量进行离散化或分组，使每个分组的响应比例都不为$0$且不为$100\%$，尤其是当一个分组个体数很小时（比如小于$100$个），强烈建议这样做，因为本身把一个分组个体数弄得很小就不是太合理。</li>
+<li>如果上面两种方法都无法使用，建议人工把该分组的响应数和非响应的数量进行一定的调整。如果响应数原本为$0$，可以人工调整响应数为$1$，如果非响应数原本为$0$，可以人工调整非响应数为$1$.</li>
+</ul>
+</blockquote>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Stoner</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yoursite.com/2020/07/27/IV-WOE/">http://yoursite.com/2020/07/27/IV-WOE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yoursite.com" target="_blank">Stoner的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%84%E5%88%86%E5%8D%A1/">评分卡</a><a class="post-meta__tags" href="/tags/%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87/">评估指标</a></div><div class="post_share"><div class="social-share" data-image="http://qe0z9wdl5.bkt.clouddn.com/20200729211145.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/07/29/%E6%A8%A1%E7%BB%84%E8%BF%9B%E8%A1%8C%E8%A7%86%E9%A2%91%E5%BD%95%E5%88%B6%E5%8F%8AHEVC%E8%A7%86%E9%A2%91%E7%BC%96%E8%A7%A3%E7%A0%81/"><img class="prev-cover" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200729211145.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">模组进行视频录制及HEVC视频编解码</div></div></a></div><div class="next-post pull-right"><a href="/2020/07/26/leetcode-674-830/"><img class="next-cover" data-src="http://qe0z9wdl5.bkt.clouddn.com/20200726220821.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">LeetCode——674/830题解</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By Stoner</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://jerryc.me/" target="_blank" rel="noopener">blog</a>!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button id="readmode" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" title="缩小字体"><i class="fas fa-minus"></i></button><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script defer id="ribbon" src="/js/third-party/canvas-ribbon.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="true"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script>if (document.getElementsByClassName('mermaid').length) {
+  loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',function () {
+    mermaid.initialize({
+      theme: 'default',
+  })
+})
+}</script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script></body></html>
